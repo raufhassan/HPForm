@@ -8,7 +8,7 @@ import {
   FETCH_USER,
   FETCH_DEPENDENTS,
   FETCH_REMARKS,
-  UPDATE_USER
+  UPDATE_USER,
 } from "./types";
 import { openDatabase } from "react-native-sqlite-storage";
 import { cos } from "react-native-reanimated";
@@ -54,6 +54,12 @@ export const saveID = (id) => {
     payload: id,
   };
 };
+export const addNew = () => (dispatch) => {
+  dispatch({
+    type: REMOVE_DATA,
+    payload: null,
+  });
+};
 
 export const insertUser = (user, dependent, userID, remarks) => (dispatch) => {
   console.log("called");
@@ -65,7 +71,7 @@ export const insertUser = (user, dependent, userID, remarks) => (dispatch) => {
   db.transaction((tx) => {
     // Loop would be here in case of many values
     tx.executeSql(
-      "INSERT INTO user (user_id,cnic_image, first_name, last_name, gender, guardian, religion, zakat, DOB, marital_status, husband_status, husband_profession, husband_income, husband_company, husband_unemp_type, husband_unemp_reason, address, house_ownership, monthly_rent, town, area, profession, emp_status, monthly_income, skills, rent_exp, education_exp, utility_exp, overall_income, family_is, family_registered,disease, remarks, images) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+      "INSERT INTO user (user_id,cnic_image, first_name, last_name, gender, guardian, religion, zakat, DOB, marital_status, contact, husband_status, husband_profession, husband_income, husband_company, husband_unemp_type, husband_unemp_reason, address, house_ownership, monthly_rent, town, area, profession, emp_status, monthly_income, skills, rent_exp, education_exp, utility_exp, overall_income, family_is, family_registered,disease, remarks, images) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
       [
         userID,
         user.cnic,
@@ -77,6 +83,7 @@ export const insertUser = (user, dependent, userID, remarks) => (dispatch) => {
         zakat,
         user.date,
         user.RelStatus,
+        user.cell,
         user.HbState,
         user.Hbprofession,
         user.Hbincome,
@@ -176,7 +183,7 @@ export const Logout = () => (dispatch) => {
     type: LOGOUT_USER,
   });
 };
-export const fetchDependents = (user, remarks,dependent) => (dispatch) => {
+export const fetchDependents = (user, remarks, dependent) => (dispatch) => {
   dispatch({
     type: FETCH_USER,
     payload: user,
@@ -201,7 +208,7 @@ export const fetchDependents = (user, remarks,dependent) => (dispatch) => {
             let row = res.rows.item(i);
             // data.push(row);
             let dep = {
-              dep_id:row.dep_id,
+              dep_id: row.dep_id,
               name: row.dep_name,
               DOB: row.dep_DOB,
               income: row.dep_income.toString(),
@@ -229,7 +236,7 @@ export const fetchDependents = (user, remarks,dependent) => (dispatch) => {
     );
   });
 };
-export const updateUser=(user, dependent, userID, remarks)=>dispatch=>{
+export const updateUser = (user, dependent, userID, remarks) => (dispatch) => {
   console.log("update called");
   var selectedFor = JSON.stringify(remarks.selectedFor);
   var images = JSON.stringify(remarks.imagesUri);
@@ -275,7 +282,7 @@ export const updateUser=(user, dependent, userID, remarks)=>dispatch=>{
         remarks.disease,
         remarks.Remarks,
         images,
-        user.person_id
+        user.person_id,
       ],
       (tx, results) => {
         console.log("update Results", results.rowsAffected);
@@ -294,13 +301,12 @@ export const updateUser=(user, dependent, userID, remarks)=>dispatch=>{
       }
     );
   });
-
-}
+};
 export const updateDependents = (dependents, personID) => (dispatch) => {
   console.log("function called");
   console.log(dependents);
   console.log("person id", personID);
- /*  for (let i = 0; i < dependents.length; i++){
+  /*  for (let i = 0; i < dependents.length; i++){
     console.log(
       [
         dependents[i].name,
@@ -333,7 +339,7 @@ export const updateDependents = (dependents, personID) => (dispatch) => {
           JSON.stringify(dependents[i].councelling),
           JSON.stringify(dependents[i].EducationSupport),
           personID,
-          dependents[i].dep_id
+          dependents[i].dep_id,
         ],
         // "SELECT * FROM dependents",
         // [],
@@ -343,8 +349,8 @@ export const updateDependents = (dependents, personID) => (dispatch) => {
             console.log("updated successfull");
             // insert = true;
             dispatch({
-              type: UPDATE_USER,
-              
+              type: REMOVE_DATA,
+              payload: null,
             });
           } else {
             console.log(" Failed");
@@ -357,7 +363,6 @@ export const updateDependents = (dependents, personID) => (dispatch) => {
       );
     }
   });
-
 };
 export const insertCheck = () => (dispatch) => {
   db.transaction((tx) => {

@@ -175,17 +175,30 @@ class Tab2 extends Component {
 
   getDepArray() {
     var dependents = this.state.Dependents.map((item) => {
-      return {
-        dep_id:item.dep_id,
-        name: item.name,
-        DOB: item.DOB,
-        income: item.income,
-        Relation: item.Relation,
-        Education: item.Education,
-        councelling: item.councelling,
-        EducationSupport: item.EducationSupport,
-        age: null,
-      };
+      if (item.hasOwnProperty("dep_id")) {
+        return {
+          dep_id: item.dep_id,
+          name: item.name,
+          DOB: item.DOB,
+          income: item.income,
+          Relation: item.Relation,
+          Education: item.Education,
+          councelling: item.councelling,
+          EducationSupport: item.EducationSupport,
+          age: null,
+        };
+      } else {
+        return {
+          name: item.name,
+          DOB: item.DOB,
+          income: item.income,
+          Relation: item.Relation,
+          Education: item.Education,
+          councelling: item.councelling,
+          EducationSupport: item.EducationSupport,
+          age: null,
+        };
+      }
     });
     return dependents;
   }

@@ -1,8 +1,18 @@
 import React, { Component } from "react";
-import { Text, FlatList, View, TouchableOpacity } from "react-native";
+import {
+  Text,
+  FlatList,
+  View,
+  TouchableOpacity,
+  BackHandler,
+} from "react-native";
 import { openDatabase } from "react-native-sqlite-storage";
 import { connect } from "react-redux";
-import { Logout, fetchDependents } from "../../../../redux/actions/userActions";
+import {
+  Logout,
+  fetchDependents,
+  addNew,
+} from "../../../../redux/actions/userActions";
 import Style from "../styles";
 
 var db = openDatabase({ name: "UserDatabase.db" });
@@ -19,31 +29,39 @@ class List extends Component {
   }
 
   async componentDidMount() {
-    if (this.props.user.id) {
-      this.setState({ id: this.props.user.id });
-    }
-    await db.transaction((txn) => {
-      txn.executeSql(
-        // "SELECT * FROM sqlite_master WHERE type='table' AND name='dependents'",
-        "SELECT * FROM 'user' WHERE user_id = ?",
-        [this.state.id],
-        (tx, res) => {
-          console.log("item:", res.rows.length);
-          var len = res.rows.length;
-          var data = [];
-          if (res.rows.length > 0) {
-            for (let i = 0; i < len; i++) {
-              //   console.log(res.rows.item(i));
-              let row = res.rows.item(i);
-              data.push(row);
-              this.setState({ record: data });
-              // dependent fetch
-              /*  */
-              // dependent fetch
+    this.focusListener = this.props.navigation.addListener("focus", () => {
+      // Call ur function here.. or add logic.
+      // if (this.props.user.id) {
+      // console.log("focused id", this.props.user.id);
+      // this.props.navigation.navigate("Tab1");
+      console.log("focused");
+      if (this.props.user.id) {
+        this.setState({ id: this.props.user.id });
+      }
+      db.transaction((txn) => {
+        txn.executeSql(
+          // "SELECT * FROM sqlite_master WHERE type='table' AND name='dependents'",
+          "SELECT * FROM 'user' WHERE user_id = ?",
+          [this.state.id],
+          (tx, res) => {
+            console.log("item:", res.rows.length);
+            var len = res.rows.length;
+            var data = [];
+            if (res.rows.length > 0) {
+              for (let i = 0; i < len; i++) {
+                //   console.log(res.rows.item(i));
+                let row = res.rows.item(i);
+                data.push(row);
+                this.setState({ record: data });
+                // dependent fetch
+                /*  */
+                // dependent fetch
+              }
             }
           }
-        }
-      );
+        );
+      });
+      // }
     });
 
     /*     db.transaction((txn) => {
@@ -58,6 +76,28 @@ class List extends Component {
       );
     }); */
   }
+
+  componentWillMount() {
+    BackHandler.addEventListener(
+      "hardwareBackPress",
+      this.handleBackButtonClick
+    );
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      "hardwareBackPress",
+      this.handleBackButtonClick
+    );
+  }
+  handleBackButtonClick = () => {
+    if (this.state.userID !== "") {
+      BackHandler.exitApp();
+    } else {
+      this.props.navigation.goBack(null);
+    }
+    return true;
+  };
   getDependents = (person_id) => {
     db.transaction((txn) => {
       txn.executeSql(
@@ -86,6 +126,7 @@ class List extends Component {
     this.props.navigation.navigate("Home");
   }
   onAdd() {
+    this.props.addNew();
     this.props.navigation.navigate("Tab1");
   }
   actionOnRow = (item, index) => {
@@ -100,6 +141,7 @@ class List extends Component {
       guardian: item.guardian,
       date: item.DOB,
       RelStatus: item.marital_status,
+      cell: item.contact,
       HbState: item.husband_status,
       Hbprofession: item.husband_profession,
       Hbcompany: item.husband_company,
@@ -124,17 +166,18 @@ class List extends Component {
       Remarks: item.remarks,
       imagesUri: JSON.parse(item.images),
     };
-    let dependent ={
-        EducationExp: item.education_exp,
-        OverallIncome: item.overall_income,
-        Rent: item.rent_exp,
-        Utility: item.utility_exp,
-    }
+    let dependent = {
+      EducationExp: item.education_exp,
+      OverallIncome: item.overall_income,
+      Rent: item.rent_exp,
+      Utility: item.utility_exp,
+    };
     // console.log("info", user);
     // console.log("item remarks", remarks);
     // console.log(item.person_id);
     // this.getDependents(item.person_id);
     this.props.fetchDependents(user, remarks, dependent);
+    this.props.navigation.navigate("Tab1");
   };
   render() {
     // console.log("state user", this.state.record);
@@ -196,4 +239,5 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   Logout,
   fetchDependents,
+  addNew,
 })(List);

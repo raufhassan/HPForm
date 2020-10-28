@@ -50,7 +50,7 @@ export default class Tab3 extends Component {
         personID: "",
         dependentInfo: {},
         profileInfo: {},
-        check:""
+        check: "",
       };
     } else {
       this.state = {
@@ -68,7 +68,7 @@ export default class Tab3 extends Component {
         personID: "",
         dependentInfo: {},
         personalInfo: {},
-        check:""
+        check: "",
       };
     }
     db.transaction((txn) => {
@@ -79,7 +79,7 @@ export default class Tab3 extends Component {
         (tx, res) => {
           // var id = res.rows.length + 1;
           var id;
-          id=res.rows.item(0).person_id + 1;
+          id = res.rows.item(0).person_id + 1;
 
           // console.log(res.rows.item(0).person_id);
           // this.setState({userID: id})
@@ -93,7 +93,7 @@ export default class Tab3 extends Component {
     // selectedFruits is array of { label, value }
     this.setState({ selectedFor: value });
   };
-   componentDidMount() {
+  componentDidMount() {
     if (this.props.personalInfo) {
       this.setState({ personalInfo: this.props.personalInfo });
     }
@@ -106,9 +106,9 @@ export default class Tab3 extends Component {
     if (this.props.personID) {
       this.setState({ personID: this.props.personID });
     }
-    if(this.props.personalInfo.person_id){
-      this.setState({check: this.props.personalInfo.person_id})
-      console.log("person",this.props.personalInfo.person_id)
+    if (this.props.personalInfo.person_id) {
+      this.setState({ check: this.props.personalInfo.person_id });
+      console.log("person", this.props.personalInfo.person_id);
     }
 
     /* try {
@@ -259,33 +259,33 @@ export default class Tab3 extends Component {
         Remarks: this.state.Remarks,
         imagesUri: this.state.imagesUri,
       };
-      if(this.state.check){
-       /*  this.props.updateUser(
+      if (this.state.check) {
+        this.props.updateUser(
           this.state.personalInfo,
           this.state.dependentInfo,
           this.state.userID,
-          remarks) */
+          remarks
+        );
         this.props.updateDependents(
           this.state.dependentInfo.dependents,
           this.state.check
-        ); 
-        console.log("edit")
-      }else{
-        console.log("insert")
-      
+        );
+        console.log("edit");
+      } else {
+        console.log("insert", this.state.personID);
+
         this.props.Remarks(remarks);
         this.props.insertUser(
-        this.state.personalInfo,
-        this.state.dependentInfo,
-        this.state.userID,
-        remarks
-      ); 
+          this.state.personalInfo,
+          this.state.dependentInfo,
+          this.state.userID,
+          remarks
+        );
         this.props.insertDependents(
-        this.state.dependentInfo.dependents,
-        this.state.personID
-      ); 
+          this.state.dependentInfo.dependents,
+          this.state.personID
+        );
       }
-      
     }
   }
 
