@@ -302,6 +302,25 @@ export const updateUser = (user, dependent, userID, remarks) => (dispatch) => {
     );
   });
 };
+export const deleteDependents = (person_id) => (dispatch) => {
+  db.transaction((tx) => {
+    tx.executeSql(
+      "DELETE FROM  dependents where person_id=?",
+      [person_id],
+      (tx, results) => {
+        console.log("Results", results.rowsAffected);
+        if (results.rowsAffected > 0) {
+          console.log("deleted");
+          dispatch({
+            type: UPDATE_USER,
+          });
+        } else {
+          console.log("unsuccessfull");
+        }
+      }
+    );
+  });
+};
 export const updateDependents = (dependents, personID) => (dispatch) => {
   console.log("function called");
   console.log(dependents);

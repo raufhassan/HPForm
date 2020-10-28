@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import Tab2 from "./index";
 import { connect } from "react-redux";
-import { DependentInfo } from "../../../../redux/actions/userActions";
+import {
+  DependentInfo,
+  deleteDependents,
+} from "../../../../redux/actions/userActions";
 import isEmpty from "../../../validation/is-empty";
 import { BackHandler } from "react-native";
 class MainSecond extends Component {
@@ -30,12 +33,16 @@ class MainSecond extends Component {
     this.props.navigation.goBack(null);
     return true;
   }
+
   render() {
-    var info;
+    var info, personalInfo;
     if (isEmpty(this.props.user.dependent)) {
       info = null;
     } else {
       info = this.props.user.dependent;
+    }
+    if (this.props.user.user) {
+      personalInfo = this.props.user.user;
     }
     return (
       <>
@@ -43,6 +50,8 @@ class MainSecond extends Component {
           navigation={this.props.navigation}
           DependentInfo={this.props.DependentInfo}
           info={info}
+          deleteDependents={this.props.deleteDependents}
+          personalInfo={personalInfo}
         />
       </>
     );
@@ -53,4 +62,5 @@ const mapStateToProps = (state) => ({
 });
 export default connect(mapStateToProps, {
   DependentInfo,
+  deleteDependents,
 })(MainSecond);

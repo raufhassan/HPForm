@@ -40,6 +40,7 @@ class Tab2 extends Component {
         rentErr: "",
         Utility: data.Utility,
         utilErr: "",
+        person_id: "",
       };
     } else {
       this.state = {
@@ -58,6 +59,7 @@ class Tab2 extends Component {
             councelling: false,
             EducationSupport: false,
             age: null,
+            person_id: "",
           },
         ],
 
@@ -76,7 +78,7 @@ class Tab2 extends Component {
     // this.handleOnChange = this.handleOnChange.bind(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     /* try {
       const retrievedItem = await AsyncStorage.getItem("Personal");
       const item = JSON.parse(retrievedItem);
@@ -84,6 +86,10 @@ class Tab2 extends Component {
     } catch (error) {
       console.log(error.message);
     } */
+    if (this.props.personalInfo.person_id) {
+      this.setState({ person_id: this.props.personalInfo.person_id });
+      console.log("person", this.props.personalInfo.person_id);
+    }
   }
 
   valdateDependent = () => {
@@ -298,6 +304,8 @@ class Tab2 extends Component {
       };
       console.log(data);
       this.props.DependentInfo(data);
+      this.props.deleteDependents(this.state.person_id);
+      console.log("tab2 person", this.state.person_id);
       this.props.navigation.navigate("Tab3");
       /* await AsyncStorage.setItem("DependentInfo", JSON.stringify(data));
       this.props.navigation.navigate("Tab3"); */

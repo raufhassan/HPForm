@@ -77,14 +77,18 @@ export default class Tab3 extends Component {
         "select person_id, first_name FROM 'user' ORDER BY person_id DESC",
         [],
         (tx, res) => {
-          // var id = res.rows.length + 1;
-          var id;
-          id = res.rows.item(0).person_id + 1;
+          if (res.rows.length > 0) {
+            // var id = res.rows.length + 1;
+            var id;
+            id = res.rows.item(0).person_id + 1;
 
-          // console.log(res.rows.item(0).person_id);
-          // this.setState({userID: id})
-          // console.log("item:", id);
-          this.setState({ personID: id });
+            // console.log(res.rows.item(0).person_id);
+            // this.setState({userID: id})
+            // console.log("item:", id);
+            this.setState({ personID: id });
+          } else {
+            this.setState({ personID: 1 });
+          }
         }
       );
     });
@@ -266,7 +270,7 @@ export default class Tab3 extends Component {
           this.state.userID,
           remarks
         );
-        this.props.updateDependents(
+        this.props.insertDependents(
           this.state.dependentInfo.dependents,
           this.state.check
         );
