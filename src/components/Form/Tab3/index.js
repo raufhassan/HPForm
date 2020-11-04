@@ -71,7 +71,7 @@ export default class Tab3 extends Component {
         check: "",
       };
     }
-    db.transaction((txn) => {
+    /*   db.transaction((txn) => {
       txn.executeSql(
         // "SELECT * FROM sqlite_master WHERE type='table' AND name='dependents'",
         "select person_id, first_name FROM 'user' ORDER BY person_id DESC",
@@ -91,7 +91,7 @@ export default class Tab3 extends Component {
           }
         }
       );
-    });
+    }); */
   }
   onSelectionsChange = (value) => {
     // selectedFruits is array of { label, value }
@@ -106,9 +106,6 @@ export default class Tab3 extends Component {
     }
     if (this.props.userID) {
       this.setState({ userID: this.props.userID });
-    }
-    if (this.props.personID) {
-      this.setState({ personID: this.props.personID });
     }
     if (this.props.personalInfo.person_id) {
       this.setState({ check: this.props.personalInfo.person_id });
@@ -133,13 +130,13 @@ export default class Tab3 extends Component {
       }
     });
     if (selectedFor.length === 0) {
-      this.setState({ typeErr: "please select atleast one option" });
+      this.setState({ typeErr: "Please select atleast one option" });
       errors.push("type error");
     } else {
       this.setState({ typeErr: "" });
     }
     if (count === 1 && disease === "") {
-      this.setState({ diseaseErr: "please select disease" });
+      this.setState({ diseaseErr: "Please select disease" });
       errors.push("disease error");
     } else {
       this.setState({ diseaseErr: "" });
@@ -151,13 +148,13 @@ export default class Tab3 extends Component {
       this.setState({ RemarksErr: "" });
     }
     if (imagesUri.length === 0) {
-      this.setState({ imageErr: "please upload images" });
+      this.setState({ imageErr: "Please upload images" });
       errors.push("images error");
     } else {
       this.setState({ imageErr: "" });
     }
     if (familyIs === "") {
-      this.setState({ familyErr: "please select review" });
+      this.setState({ familyErr: "Please select review" });
       errors.push("images error");
     } else {
       this.setState({ familyErr: "" });
@@ -228,7 +225,7 @@ export default class Tab3 extends Component {
                 { label: "Covid 19", value: "Covid 19" },
               ]}
               defaultValue={this.state.disease}
-              containerStyle={{ height: 50, width: 330 }}
+              containerStyle={Style.multiDropdown}
               style={{ backgroundColor: "#fafafa" }}
               placeholder={"select a disease"}
               itemStyle={{
@@ -252,7 +249,7 @@ export default class Tab3 extends Component {
   onSubmit() {
     // console.log(this.state);
     // e.preventDefault(e);
-    console.log(this.state);
+    // console.log(this.state);
     var isValid = this.validate();
     // console.log(isValid);
     if (isValid.length === 0) {
@@ -264,6 +261,7 @@ export default class Tab3 extends Component {
         imagesUri: this.state.imagesUri,
       };
       if (this.state.check) {
+        this.props.deleteDependents(this.state.check);
         this.props.updateUser(
           this.state.personalInfo,
           this.state.dependentInfo,
@@ -276,19 +274,20 @@ export default class Tab3 extends Component {
         );
         console.log("edit");
       } else {
-        console.log("insert", this.state.personID);
+        // console.log("insert", this.state.personID);
 
         this.props.Remarks(remarks);
         this.props.insertUser(
           this.state.personalInfo,
           this.state.dependentInfo,
           this.state.userID,
-          remarks
+          remarks,
+          this.state.dependentInfo.dependents
         );
-        this.props.insertDependents(
+        /*   this.props.insertDependents(
           this.state.dependentInfo.dependents,
           this.state.personID
-        );
+        ); */
       }
     }
   }
@@ -374,7 +373,8 @@ export default class Tab3 extends Component {
                 min={0}
                 max={10}
                 defaultValue={this.state.selectedFor}
-                containerStyle={{ height: 50, width: 330 }}
+                // containerStyle={{ height: 50, width: 330 }}
+                containerStyle={Style.multiDropdown}
                 style={{ backgroundColor: "#fafafa" }}
                 dropDownStyle={{ height: 100 }}
                 itemStyle={{
@@ -408,7 +408,7 @@ export default class Tab3 extends Component {
           {RemarksErr ? <Text style={Style.error}>{RemarksErr}</Text> : null}
           <TouchableOpacity style={Style.upload} onPress={this.OpenLibrary}>
             <Text style={{ color: "#428bca", fontWeight: "bold" }}>
-              upload images
+              Upload images
             </Text>
           </TouchableOpacity>
           {imageErr ? <Text style={Style.error}>{imageErr}</Text> : null}
@@ -416,7 +416,6 @@ export default class Tab3 extends Component {
             <View style={{ flex: 1, flexDirection: "row", marginVertical: 10 }}>
               {this.state.imagesUri
                 ? this.state.imagesUri.map((el, index) => {
-                    console.log(el);
                     return (
                       <View
                         style={

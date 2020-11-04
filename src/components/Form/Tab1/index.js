@@ -84,7 +84,7 @@ export default class Tab1 extends Component {
         fileUri: data.cnic,
         cnicErr: "",
         userID: "",
-        person_id: data.person_id
+        person_id: data.person_id,
       };
     } else {
       this.state = {
@@ -138,7 +138,7 @@ export default class Tab1 extends Component {
         fileUri: "",
         cnicErr: "",
         userID: "",
-        person_id:"",
+        person_id: "",
       };
     }
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -173,24 +173,24 @@ export default class Tab1 extends Component {
     } = this.state;
     if (first_name !== "") {
       if (first_name.length < 3) {
-        this.setState({ fnameErr: "name field must be greater than 2 words" });
+        this.setState({ fnameErr: "Name field must be greater than 2 words" });
         errors.push("fname error");
       } else {
         this.setState({ fnameErr: "" });
       }
     } else {
-      this.setState({ fnameErr: "first name field is empty" });
+      this.setState({ fnameErr: "First name field is empty" });
       errors.push("fname error");
     }
 
     if (last_name === "") {
-      this.setState({ lnameErr: "name field is empty" });
+      this.setState({ lnameErr: "Name field is empty" });
       errors.push("lname error");
     } else {
       this.setState({ lnameErr: "" });
     }
     if (gender === "") {
-      this.setState({ genderErr: "please select gender" });
+      this.setState({ genderErr: "Please select gender" });
       errors.push("gender error");
     } else {
       this.setState({ genderErr: "" });
@@ -202,19 +202,19 @@ export default class Tab1 extends Component {
       this.setState({ guardianErr: "" });
     }
     if (Religion === "") {
-      this.setState({ ReligionErr: "please select Religion" });
+      this.setState({ ReligionErr: "Please select Religion" });
       errors.push("relegi error");
     } else {
       this.setState({ ReligionErr: "" });
     }
     if (date === "") {
-      this.setState({ dateErr: "date field is empty" });
+      this.setState({ dateErr: "Date of birth field is empty" });
       errors.push("datr error");
     } else {
       this.setState({ dateErr: "" });
     }
     if (RelStatus === "") {
-      this.setState({ RelErr: "please select relationship status" });
+      this.setState({ RelErr: "Please select relationship status" });
       errors.push("rel error");
     } else {
       this.setState({ RelErr: "" });
@@ -222,13 +222,13 @@ export default class Tab1 extends Component {
     if (cell !== "") {
       var result = reg.test(this.state.cell);
       if (!result) {
-        this.setState({ cellErr: "contact number is invalid" });
+        this.setState({ cellErr: "Contact number is invalid" });
         errors.push("phon error");
       } else {
         this.setState({ cellErr: "" });
       }
     } else {
-      this.setState({ cellErr: "contact no feild is empty" });
+      this.setState({ cellErr: "Contact no feild is empty" });
       errors.push("phone error");
     }
     if (Address !== "") {
@@ -243,7 +243,7 @@ export default class Tab1 extends Component {
       errors.push("addres error");
     }
     if (Town === "") {
-      this.setState({ TownErr: "please select town" });
+      this.setState({ TownErr: "Please select town" });
       errors.push("town error");
     } else {
       this.setState({ TownErr: "" });
@@ -255,7 +255,7 @@ export default class Tab1 extends Component {
       this.setState({ AreaErr: "" });
     }
     if (profession === "") {
-      this.setState({ professionErr: "Please select Profession" });
+      this.setState({ professionErr: "Please select profession" });
       errors.push("professsio error");
     } else {
       this.setState({ professionErr: "" });
@@ -268,13 +268,13 @@ export default class Tab1 extends Component {
     }
 
     if (MonthlyIncome == "") {
-      this.setState({ incomeErr: "income field is empty" });
+      this.setState({ incomeErr: "Income field is empty" });
       errors.push("incon error");
     } else {
       this.setState({ incomeErr: "" });
     }
     if (fileUri === "") {
-      this.setState({ cnicErr: "Cnic image not uploaded" });
+      this.setState({ cnicErr: "CNIC image not uploaded" });
       errors.push("imageerror");
     } else {
       this.setState({ cnicErr: "" });
@@ -290,37 +290,37 @@ export default class Tab1 extends Component {
       }
     }
     if (HbState === "Employed" && Hbincome === "") {
-      this.setState({ HbincomeErr: "husbands income empty" });
+      this.setState({ HbincomeErr: "Husband's income empty" });
       errors.push("income err");
     } else {
       this.setState({ HbincomeErr: "" });
     }
     if (HbState === "Employed" && Hbprofession === "") {
-      this.setState({ HbprofessionErr: "husbands profession is empty" });
+      this.setState({ HbprofessionErr: "Husband's profession is empty" });
       errors.push("profession err");
     } else {
       this.setState({ HbprofessionErr: "" });
     }
     if (HbState === "Unemployed" && HbUnemp === "") {
-      this.setState({ HbUnempErr: "unemployement type is empty" });
+      this.setState({ HbUnempErr: "Unemployement type is empty" });
       errors.push("unemp err");
     } else {
       this.setState({ HbUnempErr: "" });
     }
     if (HbUnemp === "Permenant" && Hbprofession === "") {
-      this.setState({ HbprofessionErr: "husbands profession is empty" });
+      this.setState({ HbprofessionErr: "Husband's profession is empty" });
       errors.push("unemp err");
     } else {
       this.setState({ HbprofessionErr: "" });
     }
     if (HbUnemp === "Temporary" && HbReason === "") {
-      this.setState({ HbReasonErr: "Unemployement reason is empty is empty" });
+      this.setState({ HbReasonErr: "Unemployement reason is empty" });
       errors.push("unemp err");
     } else {
       this.setState({ HbReasonErr: "" });
     }
     if (!houseOwn && monthlyRent === "") {
-      this.setState({ monthlyRentErr: "monthly rent is missing" });
+      this.setState({ monthlyRentErr: "Monthly rent is empty" });
       errors.push("rent err");
     } else {
       this.setState({ monthlyRentErr: "" });
@@ -333,15 +333,12 @@ export default class Tab1 extends Component {
     if (this.props.userID) {
       await this.setState({ userID: this.props.userID });
     }
-    if(this.props.info){
-      if(this.props.info.person_id){
-        this.setState({person_id: this.props.info.person_id})
-        console.log(this.props.info.person_id)
+    if (this.props.info) {
+      if (this.props.info.person_id) {
+        this.setState({ person_id: this.props.info.person_id });
+        console.log(this.props.info.person_id);
       }
     }
-    
-
-   
   }
   componentWillMount() {
     BackHandler.addEventListener(
@@ -382,7 +379,7 @@ export default class Tab1 extends Component {
     } */
     if (isValid.length === 0) {
       let personalInfo = {
-        person_id:state.person_id,
+        person_id: state.person_id,
         first_name: state.first_name,
         last_name: state.last_name,
         Religion: state.Religion,

@@ -128,7 +128,7 @@ class Tab2 extends Component {
       }
       if (item.DOB === "") {
         var data = this.state.Dependents;
-        data[index].dateErr = "date field is empty";
+        data[index].dateErr = "Date of birth field is empty";
         this.setState({ Dependents: data });
         error.push("err");
       } else {
@@ -138,7 +138,7 @@ class Tab2 extends Component {
       }
       if (this.getAge(item.DOB) > 3 && item.income === "") {
         var data = this.state.Dependents;
-        data[index].incomeErr = "income field is empty";
+        data[index].incomeErr = "Income field is empty";
         this.setState({ Dependents: data });
         error.push("err");
       } else {
@@ -159,7 +159,7 @@ class Tab2 extends Component {
       this.setState({ rentErr: "" });
     }
     if (Utility === "") {
-      this.setState({ utilErr: "Utiltiy expense empty" });
+      this.setState({ utilErr: "Utility expense empty" });
       errors.push("utility err");
     } else {
       this.setState({ utilErr: "" });
@@ -171,7 +171,7 @@ class Tab2 extends Component {
       this.setState({ EduErr: "" });
     }
     if (OverallIncome === "") {
-      this.setState({ incomeErr: "overall income empty" });
+      this.setState({ incomeErr: "Overall income empty" });
       errors.push("income err");
     } else {
       this.setState({ incomeErr: "" });
@@ -304,7 +304,7 @@ class Tab2 extends Component {
       };
       console.log(data);
       this.props.DependentInfo(data);
-      this.props.deleteDependents(this.state.person_id);
+      // this.props.deleteDependents(this.state.person_id);
       console.log("tab2 person", this.state.person_id);
       this.props.navigation.navigate("Tab3");
       /* await AsyncStorage.setItem("DependentInfo", JSON.stringify(data));
@@ -399,7 +399,6 @@ class Tab2 extends Component {
             placeholder="DOB"
             format="YYYY-MM-DD"
             minDate="1940-01-01"
-            maxDate="2020-10-01"
             confirmBtnText="Confirm"
             cancelBtnText="Cancel"
             customStyles={{

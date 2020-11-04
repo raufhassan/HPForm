@@ -9,6 +9,7 @@ import {
   FETCH_DEPENDENTS,
   FETCH_REMARKS,
   UPDATE_USER,
+  INSERT,
 } from "./types";
 import { openDatabase } from "react-native-sqlite-storage";
 import { cos } from "react-native-reanimated";
@@ -61,7 +62,9 @@ export const addNew = () => (dispatch) => {
   });
 };
 
-export const insertUser = (user, dependent, userID, remarks) => (dispatch) => {
+export const insertUser = (user, dependent, userID, remarks, depArray) => (
+  dispatch
+) => {
   console.log("called");
   var selectedFor = JSON.stringify(remarks.selectedFor);
   var images = JSON.stringify(remarks.imagesUri);
@@ -112,11 +115,43 @@ export const insertUser = (user, dependent, userID, remarks) => (dispatch) => {
       (tx, results) => {
         console.log("Insert Results", results.rowsAffected);
         if (results.rowsAffected > 0) {
-          dispatch({
-            type: REMOVE_DATA,
-            payload: null,
-          });
-          console.log("insertion successfull");
+          console.log("user insertion successfull");
+          // console.log("last insert id", results.insertId);
+          var personId = results.insertId;
+          // dependents insertion
+          for (let i = 0; i < depArray.length; i++) {
+            tx.executeSql(
+              "INSERT INTO dependents (person_id,dep_name,dep_relation,dep_DOB,dep_education,dep_income,councelling,education) VALUES (?,?,?,?,?,?,?,?)",
+              [
+                personId,
+                depArray[i].name,
+                depArray[i].Relation,
+                depArray[i].DOB,
+                depArray[i].Education,
+                depArray[i].income,
+                JSON.stringify(depArray[i].councelling),
+                JSON.stringify(depArray[i].EducationSupport),
+              ],
+              (tx, results) => {
+                console.log("Insert Results", results.rowsAffected);
+                if (results.rowsAffected > 0) {
+                  console.log("dep insertion successfull");
+                  dispatch({
+                    type: REMOVE_DATA,
+                    payload: null,
+                  });
+                } else {
+                  console.log(" Failed");
+                }
+              },
+              (tx, err) => {
+                console.log("error", err);
+                console.log(i);
+              }
+            );
+          }
+
+          // dependents insertion
         } else {
           console.log(" Failed");
         }
@@ -288,7 +323,7 @@ export const updateUser = (user, dependent, userID, remarks) => (dispatch) => {
         console.log("update Results", results.rowsAffected);
         if (results.rowsAffected > 0) {
           dispatch({
-            type: REMOVE_DATA,
+            type: UPDATE_USER,
             payload: null,
           });
           console.log("updated successfull");
@@ -325,25 +360,6 @@ export const updateDependents = (dependents, personID) => (dispatch) => {
   console.log("function called");
   console.log(dependents);
   console.log("person id", personID);
-  /*  for (let i = 0; i < dependents.length; i++){
-    console.log(
-      [
-        dependents[i].name,
-        dependents[i].Relation,
-        dependents[i].DOB,
-        dependents[i].Education,
-        dependents[i].income,
-        JSON.stringify(dependents[i].councelling),
-        JSON.stringify(dependents[i].EducationSupport),
-        personID,
-        dependents[i].dep_id
-
-      ]
-    )
-  }
-  return {
-    type:UPDATE_USER
-  } */
   db.transaction((tx) => {
     // Loop would be here in case of many values
     for (let i = 0; i < dependents.length; i++) {
@@ -384,23 +400,22 @@ export const updateDependents = (dependents, personID) => (dispatch) => {
   });
 };
 export const insertCheck = () => (dispatch) => {
-  db.transaction((tx) => {
+  db.transaction((txn) => {
     // Loop would be here in case of many values
 
-    tx.executeSql(
+    txn.executeSql(
       "INSERT INTO table_user (user_name, user_contact, user_email) VALUES (?,?,?)",
       ["hassdas", 234324, "sdds@gmail.com"],
       (tx, results) => {
         console.log("Insert Results", results.rowsAffected);
         if (results.rowsAffected > 0) {
           console.log("inserted");
-          console.log(results.rows.item(0));
-
-          // var x = db.last_insert_rowid();
-          // console.log(x);
-
-          dispatch({
-            type: LOGOUT_USER,
+          console.log(results.insertId);
+          txn.executeSql("SELECT * FROM dependents", [], (tx, results) => {
+            console.log("rows length", results.rows.length);
+            dispatch({
+              type: LOGOUT_USER,
+            });
           });
         } else {
           console.log("Updation Failed");

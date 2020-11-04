@@ -3,6 +3,7 @@ import Form from "./index";
 import { saveID, insertCheck } from "../../../redux/actions/userActions";
 import { connect } from "react-redux";
 import { openDatabase } from "react-native-sqlite-storage";
+
 var db = openDatabase({ name: "UserDatabase.db" });
 class Home extends Component {
   constructor(props) {
@@ -44,7 +45,7 @@ class Home extends Component {
       );
     });
     // check table
-    /* db.transaction(function (txn) {
+    db.transaction(function (txn) {
       txn.executeSql(
         "SELECT name FROM sqlite_master WHERE type='table' AND name='table_user'",
         [],
@@ -59,7 +60,7 @@ class Home extends Component {
           }
         }
       );
-    }); */
+    });
   }
 
   componentDidMount() {
@@ -70,7 +71,7 @@ class Home extends Component {
       // Call ur function here.. or add logic.
       if (this.props.user.id) {
         // console.log("focused id", this.props.user.id);
-        // this.props.navigation.navigate("Tab1");
+        this.props.navigation.navigate("List");
       }
     });
   }

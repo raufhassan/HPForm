@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   BackHandler,
+  Alert,
 } from "react-native";
 import { openDatabase } from "react-native-sqlite-storage";
 import { connect } from "react-redux";
@@ -27,8 +28,33 @@ class List extends Component {
       dependents: [],
     };
   }
+  fetchData = () => {
+    db.transaction((txn) => {
+      txn.executeSql(
+        // "SELECT * FROM sqlite_master WHERE type='table' AND name='dependents'",
+        "SELECT * FROM 'user' WHERE user_id = ?",
+        [this.state.id],
+        (tx, res) => {
+          console.log("item:", res.rows.length);
+          var len = res.rows.length;
+          var data = [];
+          if (res.rows.length > 0) {
+            for (let i = 0; i < len; i++) {
+              //   console.log(res.rows.item(i));
+              let row = res.rows.item(i);
+              data.push(row);
+              this.setState({ record: data });
+              // dependent fetch
+              /*  */
+              // dependent fetch
+            }
+          }
+        }
+      );
+    });
+  };
 
-  async componentDidMount() {
+  componentDidMount() {
     this.focusListener = this.props.navigation.addListener("focus", () => {
       // Call ur function here.. or add logic.
       // if (this.props.user.id) {
@@ -38,29 +64,8 @@ class List extends Component {
       if (this.props.user.id) {
         this.setState({ id: this.props.user.id });
       }
-      db.transaction((txn) => {
-        txn.executeSql(
-          // "SELECT * FROM sqlite_master WHERE type='table' AND name='dependents'",
-          "SELECT * FROM 'user' WHERE user_id = ?",
-          [this.state.id],
-          (tx, res) => {
-            console.log("item:", res.rows.length);
-            var len = res.rows.length;
-            var data = [];
-            if (res.rows.length > 0) {
-              for (let i = 0; i < len; i++) {
-                //   console.log(res.rows.item(i));
-                let row = res.rows.item(i);
-                data.push(row);
-                this.setState({ record: data });
-                // dependent fetch
-                /*  */
-                // dependent fetch
-              }
-            }
-          }
-        );
-      });
+      this.fetchData();
+
       // }
     });
 
@@ -179,10 +184,57 @@ class List extends Component {
     this.props.fetchDependents(user, remarks, dependent);
     this.props.navigation.navigate("Tab1");
   };
+  showAlert = (item) => {
+    Alert.alert(
+      "Delete entry",
+      "Are you sure?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => this.deleteRow(item) },
+      ],
+      { cancelable: false }
+    );
+  };
+  deleteRow = (item) => {
+    // console.log(item);
+    db.transaction((tx) => {
+      tx.executeSql(
+        "DELETE FROM user where person_id=?",
+        [item.person_id],
+        (tx, results) => {
+          console.log("Results", results.rowsAffected);
+          if (results.rowsAffected > 0) {
+            console.log("user deleted");
+          } else {
+            console.log("unsuccessfull");
+          }
+        }
+      );
+    });
+    db.transaction((tx) => {
+      tx.executeSql(
+        "DELETE FROM dependents where person_id=?",
+        [item.person_id],
+        (tx, results) => {
+          console.log("Results", results.rowsAffected);
+          if (results.rowsAffected > 0) {
+            console.log("dep deleted");
+          } else {
+            console.log("unsuccessfull");
+          }
+        }
+      );
+    });
+    this.fetchData();
+  };
   render() {
     // console.log("state user", this.state.record);
     // console.log("state depe", this.state.dependents);
-    console.log(this.props.user.dependent);
+    // console.log(this.props.user.dependent);
 
     return (
       <View style={Style.container}>
@@ -208,14 +260,24 @@ class List extends Component {
             return index.toString();
           }}
           renderItem={({ item, index }) => (
-            <View>
-              <TouchableOpacity
-                style={Style.listItem}
-                onPress={() => this.actionOnRow(item, index)}
-              >
+            <View style={Style.listItem}>
+              <View style={{ flexDirection: "row", width: "75%" }}>
                 <Text style={{ color: "#fff", fontSize: 15 }}>
                   {item.first_name}
                 </Text>
+                <Text style={{ marginLeft: 3, color: "#fff", fontSize: 15 }}>
+                  {item.last_name}
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                // style={Style.listItem}
+                onPress={() => this.actionOnRow(item, index)}
+              >
+                <Text style={{ color: "#fff" }}> Edit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.showAlert(item)}>
+                <Text style={{ color: "#fff", marginLeft: 10 }}>Delete</Text>
               </TouchableOpacity>
             </View>
           )}

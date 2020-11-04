@@ -9,4 +9,5 @@ export const FETCH_USER = "FETCH_USER";
 export const FETCH_DEPENDENTS = "FETCH_DEPENDENTS";
 export const FETCH_REMARKS = "FETCH_REMARKS";
 
-export const UPDATE_USER = "UPDATE_USER"
+export const UPDATE_USER = "UPDATE_USER";
+export const INSERT = "INSERT";

@@ -133,5 +133,15 @@ export default Style = StyleSheet.create({
     marginVertical: 5,
     flex: 1,
     alignItems: "center",
-  }
+    flexDirection: "row",
+    flex: 1,
+  },
+  multiDropdown: {
+    width: wp("80%"),
+    height: hp("7%"),
+  },
+  delete: {
+    backgroundColor: "red",
+    width: wp("10%"),
+  },
 });

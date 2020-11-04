@@ -5,7 +5,8 @@ import {
   insertUser,
   insertDependents,
   updateUser,
-  updateDependents
+  updateDependents,
+  deleteDependents,
 } from "../../../../redux/actions/userActions";
 import { connect } from "react-redux";
 import isEmpty from "../../../validation/is-empty";
@@ -17,39 +18,18 @@ class MainThird extends Component {
     super(props);
 
     this.state = {
-      personID: "",
-      userId:''
+      userId: "",
     };
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
-/*     db.transaction((txn) => {
-      txn.executeSql(
-        // "SELECT * FROM sqlite_master WHERE type='table' AND name='dependents'",
-        "select * FROM 'user'",
-        [],
-        (tx, res) => {
-          var id = res.rows.length + 1;
-          // this.setState({userID: id})
-          // console.log("item:", id);
-          this.setState({ personID: id });
-        }
-      );
-    }); */
   }
-    componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.user.user !== this.props.user.user) {
       this.props.navigation.navigate("List");
     }
   }
- /*  static getDerivedStateFromProps = (props,state) => {
-    if(props.user.id !== state.userId){
-      console.log("navigate")
-      this.props.navigation.navigate("List");
-    }
-
-  } */
 
   componentDidMount() {
-    this.setState({userId:this.props.user.id})
+    this.setState({ userId: this.props.user.id });
   }
   componentWillMount() {
     BackHandler.addEventListener(
@@ -84,10 +64,6 @@ class MainThird extends Component {
     if (this.props.user.id) {
       userID = this.props.user.id;
     }
-    if (this.state.personID !== "") {
-      personID = this.state.personID;
-    }
-    console.log(this.state.personID);
 
     return (
       <>
@@ -98,11 +74,11 @@ class MainThird extends Component {
           insertDependents={this.props.insertDependents}
           updateUser={this.props.updateUser}
           updateDependents={this.props.updateDependents}
+          deleteDependents={this.props.deleteDependents}
           info={remarks}
           personalInfo={personalInfo}
           dependentInfo={dependentInfo}
           userID={userID}
-          personID={personID}
         />
       </>
     );
@@ -116,5 +92,6 @@ export default connect(mapStateToProps, {
   insertUser,
   insertDependents,
   updateUser,
-  updateDependents
+  updateDependents,
+  deleteDependents,
 })(MainThird);

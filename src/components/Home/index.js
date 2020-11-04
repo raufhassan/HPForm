@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { View, Text, TouchableOpacity, Button, TextInput } from "react-native";
 import Style from "./style";
 import AsyncStorage from "@react-native-community/async-storage";
-import user from "../../../redux/reducers/user";
+import Download from "./Download";
+let RNFS = require("react-native-fs");
 
 export default class Form extends Component {
   constructor(props) {
@@ -45,29 +46,9 @@ export default class Form extends Component {
     this.props.navigation.navigate("Tab1"); */
   }
 
-  async componentDidMount() {
-    /*   if (AsyncStorage.getItem("id") !== null) {
-      this.props.navigation.navigate("Form");
-    } else {
-      console.log("enter id");
-    } */
-    /*     try {
-      var value = await AsyncStorage.getItem("id");
-      if (value !== "") {
-        // We have data!!
-        console.log(value);
-        this.props.navigation.navigate("Tab1");
-      }
-    } catch (error) {
-      // Error retrieving data
-      console.log("enter user id");
-    } */
-  }
+  componentDidMount() {}
 
   render() {
-    // console.log(this.props.navigation.state);
-    // let isFocused = this.props.navigation.isFocused();
-    // console.log("home", isFocused);
     return (
       <View style={Style.container}>
         <Text style={Style.myText}>Enter User ID</Text>
@@ -85,8 +66,9 @@ export default class Form extends Component {
           style={Style.submit}
           onPress={this.onSubmit.bind(this)}
         />
+        <Download />
 
-        <TouchableOpacity
+        {/*  <TouchableOpacity
           onPress={() => this.props.navigation.navigate("Tab1")}
         >
           <Text> Go to Form </Text>
@@ -100,7 +82,7 @@ export default class Form extends Component {
           onPress={() => this.props.navigation.navigate("Tab3")}
         >
           <Text> Go to tab3 </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     );
   }
