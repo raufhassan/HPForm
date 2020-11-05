@@ -261,7 +261,7 @@ class List extends Component {
           }}
           renderItem={({ item, index }) => (
             <View style={Style.listItem}>
-              <View style={{ flexDirection: "row", width: "75%" }}>
+              <View style={{ flexDirection: "row", marginRight: "auto" }}>
                 <Text style={{ color: "#fff", fontSize: 15 }}>
                   {item.first_name}
                 </Text>
@@ -269,16 +269,17 @@ class List extends Component {
                   {item.last_name}
                 </Text>
               </View>
-
-              <TouchableOpacity
-                // style={Style.listItem}
-                onPress={() => this.actionOnRow(item, index)}
-              >
-                <Text style={{ color: "#fff" }}> Edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.showAlert(item)}>
-                <Text style={{ color: "#fff", marginLeft: 10 }}>Delete</Text>
-              </TouchableOpacity>
+              <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+                <TouchableOpacity
+                  // style={Style.listItem}
+                  onPress={() => this.actionOnRow(item, index)}
+                >
+                  <Text style={{ color: "#fff" }}> Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.showAlert(item)}>
+                  <Text style={{ color: "#fff", marginLeft: 10 }}>Delete</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
         />
