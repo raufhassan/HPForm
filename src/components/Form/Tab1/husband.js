@@ -23,7 +23,7 @@ export function Husband(props) {
         <TextInput
           value={data.Hbprofession}
           onChangeText={(value) => props.onProfessionChange(value)}
-          placeholder={"Profession"}
+          placeholder={"Temporary"}
           style={Style.input}
         />
         {data.HbprofessionErr ? (
@@ -32,7 +32,7 @@ export function Husband(props) {
       </>
     );
   }
-  if (data.HbUnemp === "Temporary") {
+  if (data.HbUnemp === "Profession") {
     input2 = (
       <>
         <TextInput
@@ -53,19 +53,19 @@ export function Husband(props) {
         <TextInput
           value={data.Hbprofession}
           onChangeText={(value) => props.onProfessionChange(value)}
-          placeholder={"Profession"}
+          placeholder={"Husband profession"}
           style={Style.input}
         />
         <TextInput
           value={data.Hbincome}
           onChangeText={(value) => props.onIncomeChange(value)}
-          placeholder={"Income"}
+          placeholder={"Husband income"}
           style={Style.input}
         />
         <TextInput
           value={data.Hbcompany}
           onChangeText={(value) => props.onCompanyChange(value)}
-          placeholder={"Company"}
+          placeholder={"Husband company"}
           style={Style.input}
         />
       </>
@@ -84,7 +84,7 @@ export function Husband(props) {
               }
             }}
           >
-            <Picker.Item label="Unemployement Type" value="-1" />
+            <Picker.Item label="Husband unemployement Type" value="-1" />
             <Picker.Item label="Permenant" value="Permenant" />
             <Picker.Item label="Temporary" value="Temporary" />
           </Picker>
@@ -104,7 +104,7 @@ export function Husband(props) {
           selectedValue={data.HbState}
           onValueChange={(value) => props.onStatusChange(value)}
         >
-          <Picker.Item label="Husband Employment status" value="-1" />
+          <Picker.Item label="Husband employment status" value="-1" />
           <Picker.Item label="Employed" value="Employed" />
           <Picker.Item label="Unemployed" value="Unemployed" />
         </Picker>

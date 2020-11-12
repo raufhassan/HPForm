@@ -54,8 +54,8 @@ export default class Tab1 extends Component {
         monthlyRentErr: "",
         Town: data.Town,
         TownErr: "",
-        Area: data.Area,
-        AreaErr: "",
+        /*  Area: data.Area,
+        AreaErr: "", */
         profession: data.profession,
         professionErr: "",
         empStatus: data.empStatus,
@@ -107,8 +107,8 @@ export default class Tab1 extends Component {
         monthlyRentErr: "",
         Town: "",
         TownErr: "",
-        Area: "",
-        AreaErr: "",
+        /*  Area: "",
+        AreaErr: "", */
         profession: "",
         professionErr: "",
         empStatus: "",
@@ -152,7 +152,6 @@ export default class Tab1 extends Component {
       last_name,
       date,
       Address,
-      Area,
       Town,
       cell,
       fileUri,
@@ -248,12 +247,12 @@ export default class Tab1 extends Component {
     } else {
       this.setState({ TownErr: "" });
     }
-    if (Area === "") {
+    /*    if (Area === "") {
       this.setState({ AreaErr: "Area field is empty" });
       errors.push("area error");
     } else {
       this.setState({ AreaErr: "" });
-    }
+    } */
     if (profession === "") {
       this.setState({ professionErr: "Please select profession" });
       errors.push("professsio error");
@@ -659,27 +658,6 @@ export default class Tab1 extends Component {
               <Picker.Item label="Male" value="Male" />
               <Picker.Item label="Female" value="Female" />
             </Picker>
-            {/*        <DropDownPicker
-              items={[
-                { label: "male", value: "male" },
-                { label: "female", value: "female" },
-              ]}
-              defaultValue={this.state.gender}
-              containerStyle={{ height: 40 }}
-              style={Style.Dropdown}
-              placeholder={"select gender"}
-              itemStyle={{
-                justifyContent: "flex-start",
-                color: "red",
-              }}
-              activeItemStyle={{ color: "red" }}
-              dropDownStyle={{ backgroundColor: "#fafafa" }}
-              onChangeItem={(item) =>
-                this.setState({
-                  gender: item.value,
-                })
-              }
-            /> */}
           </View>
           {genderErr ? <Text style={Style.error}>{genderErr}</Text> : null}
 
@@ -706,39 +684,9 @@ export default class Tab1 extends Component {
               <Picker.Item label="Other" value="Other" />
             </Picker>
           </View>
-          {/*       <DropDownPicker
-            items={[
-              { label: "Islam", value: "Islam" },
-              { label: "Christianity", value: "Christianity" },
-              { label: "Hinduism", value: "Hinduism" },
-              { label: "jew", value: "jew" },
-              { label: "other", value: "other" },
-            ]}
-            defaultValue={this.state.Religion}
-            containerStyle={{ height: 40 }}
-            style={Style.Dropdown}
-            placeholder={"select Religion"}
-            itemStyle={{
-              justifyContent: "flex-start",
-            }}
-            dropDownStyle={{ backgroundColor: "#fafafa" }}
-            onChangeItem={(item) =>
-              this.setState({
-                Religion: item.value,
-              })
-            }
-          /> */}
+
           {ReligionErr ? <Text style={Style.error}>{ReligionErr}</Text> : null}
           {this.state.Religion === "Islam" ? (
-            /*  <View style={Style.center}>
-              <Text style={{ marginBottom: 10 }}>Eligible for zakat?</Text>
-              <RadioForm
-                radio_props={radio_props}
-                initial={this.state.zakat}
-                formHorizontal={true}
-                onPress={(event) => this.setState({ zakat: event })}
-              />
-            </View> */
             <View
               style={{
                 width: "80%",
@@ -766,7 +714,7 @@ export default class Tab1 extends Component {
             placeholder="DOB"
             format="YYYY-MM-DD"
             minDate="1940-01-01"
-            // maxDate="2005-06-01"
+            maxDate="2003-01-01"
             confirmBtnText="Confirm"
             cancelBtnText="Cancel"
             customStyles={{
@@ -807,32 +755,7 @@ export default class Tab1 extends Component {
             </Picker>
           </View>
           {husbandStatus}
-          {/*   <View style={{ marginBottom: 10 }}>
-            <DropDownPicker
-              items={[
-                { label: "Single", value: "Single" },
-                { label: "Married", value: "Married" },
-                { label: "Widow", value: "Widow" },
-                { label: "Widower", value: "Widower" },
-                { label: "Seperated", value: "Seperated" },
-              ]}
-              defaultValue={this.state.RelStatus}
-              containerStyle={{ height: 40 }}
-              style={Style.Dropdown}
-              placeholder={"select Relationship status"}
-            
 
-              itemStyle={{
-                justifyContent: "flex-start",
-              }}
-              dropDownStyle={{ backgroundColor: "#fafafa" }}
-              onChangeItem={(item) =>
-                this.setState({
-                  RelStatus: item.value,
-                })
-              }
-            />
-          </View> */}
           {RelErr ? <Text style={Style.error}>{RelErr}</Text> : null}
           <TextInput
             value={this.state.cell}
@@ -879,7 +802,7 @@ export default class Tab1 extends Component {
               ) : null}
             </>
           ) : null}
-          <View style={Style.picker}>
+          {/*  <View style={Style.picker}>
             <Picker
               selectedValue={this.state.Town}
               style={Style.picker}
@@ -898,39 +821,22 @@ export default class Tab1 extends Component {
               <Picker.Item label="Korangi" value="Korangi" />
               <Picker.Item label="Others" value="Others" />
             </Picker>
-          </View>
-          {/*  <View style={{ marginBottom: 10 }}>
-            <DropDownPicker
-              items={[
-                { label: "Surjani", value: "Surjani" },
-                { label: "North karachi", value: "North karachi" },
-                { label: "New Karachi", value: "New Karachi" },
-                { label: "Korangi", value: "Korangi" },
-                { label: "others", value: "others" },
-              ]}
-              defaultValue={this.state.Town}
-              containerStyle={{ height: 40 }}
-              style={Style.Dropdown}
-              placeholder={"select Town"}
-              itemStyle={{
-                justifyContent: "flex-start",
-              }}
-              dropDownStyle={{ backgroundColor: "#fafafa" }}
-              onChangeItem={(item) =>
-                this.setState({
-                  Town: item.value,
-                })
-              }
-            />
           </View> */}
-          {TownErr ? <Text style={Style.error}>{TownErr}</Text> : null}
           <TextInput
+            value={this.state.Town}
+            onChangeText={(Town) => this.setState({ Town })}
+            placeholder={"Town"}
+            style={Style.input}
+          ></TextInput>
+
+          {TownErr ? <Text style={Style.error}>{TownErr}</Text> : null}
+          {/*  <TextInput
             value={this.state.Area}
             onChangeText={(Area) => this.setState({ Area })}
             placeholder={"Area"}
             style={Style.input}
-          ></TextInput>
-          {AreaErr ? <Text style={Style.error}>{AreaErr}</Text> : null}
+          ></TextInput> */}
+          {/* {AreaErr ? <Text style={Style.error}>{AreaErr}</Text> : null} */}
           <View style={Style.picker}>
             <Picker
               selectedValue={this.state.profession}
@@ -950,30 +856,7 @@ export default class Tab1 extends Component {
               <Picker.Item label="Others" value="Others" />
             </Picker>
           </View>
-          {/* <View style={{ marginBottom: 10 }}>
-            <DropDownPicker
-              items={[
-                { label: "Driver", value: "Driver" },
-                { label: "Maid", value: "Maid" },
-                { label: "New Karachi", value: "New Karachi" },
-                { label: "Labor/Daily wage worker", value: "Labor" },
-                { label: "Others", value: "others" },
-              ]}
-              defaultValue={this.state.profession}
-              containerStyle={{ height: 40 }}
-              style={Style.Dropdown}
-              placeholder={"select Profession"}
-              itemStyle={{
-                justifyContent: "flex-start",
-              }}
-              dropDownStyle={{ backgroundColor: "#fafafa" }}
-              onChangeItem={(item) =>
-                this.setState({
-                  profession: item.value,
-                })
-              }
-            />
-          </View> */}
+
           {professionErr ? (
             <Text style={Style.error}>{professionErr}</Text>
           ) : null}
@@ -995,28 +878,7 @@ export default class Tab1 extends Component {
               <Picker.Item label="Self-employed" value="Self-employed" />
             </Picker>
           </View>
-          {/*  <View style={{ marginBottom: 10 }}>
-            <DropDownPicker
-              items={[
-                { label: "Employed", value: "Employed" },
-                { label: "Unemployed", value: "Unemployed" },
-                { label: "self-employed", value: "self-employed" },
-              ]}
-              defaultValue={this.state.empStatus}
-              containerStyle={{ height: 40 }}
-              style={Style.Dropdown}
-              placeholder={"Select Employement status"}
-              itemStyle={{
-                justifyContent: "flex-start",
-              }}
-              dropDownStyle={{ backgroundColor: "#fafafa" }}
-              onChangeItem={(item) =>
-                this.setState({
-                  empStatus: item.value,
-                })
-              }
-            />
-          </View> */}
+
           {empStatusErr ? (
             <Text style={Style.error}>{empStatusErr}</Text>
           ) : null}

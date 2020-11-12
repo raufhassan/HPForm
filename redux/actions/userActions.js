@@ -119,6 +119,12 @@ export const insertUser = (user, dependent, userID, remarks, depArray) => (
           // console.log("last insert id", results.insertId);
           var personId = results.insertId;
           // dependents insertion
+          // console.log("details", personId);
+          // console.log("depArr", depArray);
+          dispatch({
+            type: REMOVE_DATA,
+            payload: null,
+          });
           for (let i = 0; i < depArray.length; i++) {
             tx.executeSql(
               "INSERT INTO dependents (person_id,dep_name,dep_relation,dep_DOB,dep_education,dep_income,councelling,education) VALUES (?,?,?,?,?,?,?,?)",
@@ -136,10 +142,6 @@ export const insertUser = (user, dependent, userID, remarks, depArray) => (
                 console.log("Insert Results", results.rowsAffected);
                 if (results.rowsAffected > 0) {
                   console.log("dep insertion successfull");
-                  dispatch({
-                    type: REMOVE_DATA,
-                    payload: null,
-                  });
                 } else {
                   console.log(" Failed");
                 }
@@ -234,7 +236,7 @@ export const fetchDependents = (user, remarks, dependent) => (dispatch) => {
       "SELECT * FROM 'dependents' WHERE person_id = ?",
       [user.person_id],
       (tx, res) => {
-        console.log("item:", res.rows.length);
+        console.log("itney dependets:", res.rows.length);
         var len = res.rows.length;
         var data = [];
         if (res.rows.length > 0) {
@@ -266,6 +268,18 @@ export const fetchDependents = (user, remarks, dependent) => (dispatch) => {
             payload: dep,
           });
           // console.log("state dep", dep);
+        } else {
+          let dep = {
+            dependents: [],
+            EducationExp: dependent.EducationExp.toString(),
+            OverallIncome: dependent.OverallIncome.toString(),
+            Rent: dependent.Rent.toString(),
+            Utility: dependent.Utility.toString(),
+          };
+          dispatch({
+            type: FETCH_DEPENDENTS,
+            payload: dep,
+          });
         }
       }
     );

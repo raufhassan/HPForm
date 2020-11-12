@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, TouchableOpacity, Button, TextInput } from "react-native";
 import Style from "./style";
-import AsyncStorage from "@react-native-community/async-storage";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import Download from "./Download";
 let RNFS = require("react-native-fs");
 
@@ -36,6 +36,9 @@ export default class Form extends Component {
     } else {
       console.log("error");
     }
+    showDatepicker = () => {
+      this.setState({ show: true });
+    };
 
     // console.log(userId);
     // this.props.insertCheck();
@@ -49,6 +52,7 @@ export default class Form extends Component {
   componentDidMount() {}
 
   render() {
+    console.log(this.state.date);
     return (
       <View style={Style.container}>
         <Text style={Style.myText}>Enter User ID</Text>
