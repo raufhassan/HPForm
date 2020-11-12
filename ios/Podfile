@@ -27,6 +27,8 @@ target 'formApp' do
 
   pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
 
+  pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
+
   target 'formAppTests' do
     inherit! :complete
     # Pods for testing

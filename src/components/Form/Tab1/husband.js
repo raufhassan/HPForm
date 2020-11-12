@@ -60,6 +60,7 @@ export function Husband(props) {
           value={data.Hbincome}
           onChangeText={(value) => props.onIncomeChange(value)}
           placeholder={"Husband income"}
+          keyboardType={"numeric"}
           style={Style.input}
         />
         <TextInput

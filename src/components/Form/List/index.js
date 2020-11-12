@@ -15,6 +15,7 @@ import {
   addNew,
 } from "../../../../redux/actions/userActions";
 import Style from "../styles";
+import Geolocation from '@react-native-community/geolocation';
 
 var db = openDatabase({ name: "UserDatabase.db" });
 
@@ -235,6 +236,8 @@ class List extends Component {
     // console.log("state user", this.state.record);
     // console.log("state depe", this.state.dependents);
     // console.log(this.props.user.dependent);
+    // Geolocation.getCurrentPosition(info => console.log(info));
+    Geolocation.getCurrentPosition((success)=>{console.log(success)}, (e)=>{console.log(e)}, {timeout: 20000});
 
     return (
       <View style={Style.container}>
