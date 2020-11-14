@@ -54,8 +54,8 @@ export default class Tab1 extends Component {
         monthlyRentErr: "",
         Town: data.Town,
         TownErr: "",
-        /*  Area: data.Area,
-        AreaErr: "", */
+         Area: data.Area,
+        AreaErr: "",
         profession: data.profession,
         professionErr: "",
         empStatus: data.empStatus,
@@ -152,6 +152,7 @@ export default class Tab1 extends Component {
       last_name,
       date,
       Address,
+      Area,
       Town,
       cell,
       fileUri,
@@ -247,12 +248,12 @@ export default class Tab1 extends Component {
     } else {
       this.setState({ TownErr: "" });
     }
-    /*    if (Area === "") {
+       if (Area === "") {
       this.setState({ AreaErr: "Area field is empty" });
       errors.push("area error");
     } else {
       this.setState({ AreaErr: "" });
-    } */
+    }
     if (profession === "") {
       this.setState({ professionErr: "Please select profession" });
       errors.push("professsio error");
@@ -830,13 +831,13 @@ export default class Tab1 extends Component {
           ></TextInput>
 
           {TownErr ? <Text style={Style.error}>{TownErr}</Text> : null}
-          {/*  <TextInput
+           <TextInput
             value={this.state.Area}
             onChangeText={(Area) => this.setState({ Area })}
             placeholder={"Area"}
             style={Style.input}
-          ></TextInput> */}
-          {/* {AreaErr ? <Text style={Style.error}>{AreaErr}</Text> : null} */}
+          ></TextInput>
+          {AreaErr ? <Text style={Style.error}>{AreaErr}</Text> : null}
           <View style={Style.picker}>
             <Picker
               selectedValue={this.state.profession}

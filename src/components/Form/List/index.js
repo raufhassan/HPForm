@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from 'react';
 import {
   Text,
   FlatList,
@@ -6,18 +6,21 @@ import {
   TouchableOpacity,
   BackHandler,
   Alert,
-} from "react-native";
-import { openDatabase } from "react-native-sqlite-storage";
-import { connect } from "react-redux";
+  Image,
+} from 'react-native';
+import {Container, Header} from 'native-base';
+import {openDatabase} from 'react-native-sqlite-storage';
+import {connect} from 'react-redux';
 import {
   Logout,
   fetchDependents,
   addNew,
-} from "../../../../redux/actions/userActions";
-import Style from "../styles";
+} from '../../../../redux/actions/userActions';
+import Style from '../styles';
 import Geolocation from '@react-native-community/geolocation';
-
-var db = openDatabase({ name: "UserDatabase.db" });
+import Geocoder from 'react-native-geocoding';
+import UserCard from './userCard';
+var db = openDatabase({name: 'UserDatabase.db'});
 
 class List extends Component {
   constructor(props) {
@@ -25,7 +28,7 @@ class List extends Component {
 
     this.state = {
       record: [],
-      id: "",
+      id: '',
       dependents: [],
     };
   }
@@ -36,7 +39,7 @@ class List extends Component {
         "SELECT * FROM 'user' WHERE user_id = ?",
         [this.state.id],
         (tx, res) => {
-          console.log("item:", res.rows.length);
+          console.log('item:', res.rows.length);
           var len = res.rows.length;
           var data = [];
           if (res.rows.length > 0) {
@@ -44,28 +47,29 @@ class List extends Component {
               //   console.log(res.rows.item(i));
               let row = res.rows.item(i);
               data.push(row);
-              this.setState({ record: data });
+              this.setState({record: data});
               // dependent fetch
               /*  */
               // dependent fetch
             }
           }
-        }
+        },
       );
     });
   };
 
   componentDidMount() {
-    this.focusListener = this.props.navigation.addListener("focus", () => {
+    this.focusListener = this.props.navigation.addListener('focus', () => {
       // Call ur function here.. or add logic.
       // if (this.props.user.id) {
       // console.log("focused id", this.props.user.id);
       // this.props.navigation.navigate("Tab1");
-      console.log("focused");
+      console.log('focused');
       if (this.props.user.id) {
-        this.setState({ id: this.props.user.id });
+        this.setState({id: this.props.user.id});
       }
       this.fetchData();
+      this.getLocation();
 
       // }
     });
@@ -85,19 +89,19 @@ class List extends Component {
 
   componentWillMount() {
     BackHandler.addEventListener(
-      "hardwareBackPress",
-      this.handleBackButtonClick
+      'hardwareBackPress',
+      this.handleBackButtonClick,
     );
   }
 
   componentWillUnmount() {
     BackHandler.removeEventListener(
-      "hardwareBackPress",
-      this.handleBackButtonClick
+      'hardwareBackPress',
+      this.handleBackButtonClick,
     );
   }
   handleBackButtonClick = () => {
-    if (this.state.userID !== "") {
+    if (this.state.userID !== '') {
       BackHandler.exitApp();
     } else {
       this.props.navigation.goBack(null);
@@ -111,7 +115,7 @@ class List extends Component {
         "SELECT * FROM 'dependents' WHERE person_id = ?",
         [person_id],
         (tx, res) => {
-          console.log("item:", res.rows.length);
+          console.log('item:', res.rows.length);
           var len = res.rows.length;
           var data2 = [];
           if (res.rows.length > 0) {
@@ -120,20 +124,20 @@ class List extends Component {
               let row = res.rows.item(i);
               data2.push(row);
             }
-            this.setState({ dependents: data2 });
-            console.log("state dep", this.state.dependents);
+            this.setState({dependents: data2});
+            console.log('state dep', this.state.dependents);
           }
-        }
+        },
       );
     });
   };
   async onPress() {
     await this.props.Logout();
-    this.props.navigation.navigate("Home");
+    this.props.navigation.navigate('Home');
   }
   onAdd() {
     this.props.addNew();
-    this.props.navigation.navigate("Tab1");
+    this.props.navigation.navigate('Tab1');
   }
   actionOnRow = (item, index) => {
     // var { record } = this.state;
@@ -183,119 +187,130 @@ class List extends Component {
     // console.log(item.person_id);
     // this.getDependents(item.person_id);
     this.props.fetchDependents(user, remarks, dependent);
-    this.props.navigation.navigate("Tab1");
+    this.props.navigation.navigate('Tab1');
   };
   showAlert = (item) => {
     Alert.alert(
-      "Delete entry",
-      "Are you sure?",
+      'Delete entry',
+      'Are you sure?',
       [
         {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
         },
-        { text: "OK", onPress: () => this.deleteRow(item) },
+        {text: 'OK', onPress: () => this.deleteRow(item)},
       ],
-      { cancelable: false }
+      {cancelable: false},
     );
   };
   deleteRow = (item) => {
     // console.log(item);
     db.transaction((tx) => {
       tx.executeSql(
-        "DELETE FROM user where person_id=?",
+        'DELETE FROM user where person_id=?',
         [item.person_id],
         (tx, results) => {
-          console.log("Results", results.rowsAffected);
+          console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
-            console.log("user deleted");
+            console.log('user deleted');
           } else {
-            console.log("unsuccessfull");
+            console.log('unsuccessfull');
           }
-        }
+        },
       );
     });
     db.transaction((tx) => {
       tx.executeSql(
-        "DELETE FROM dependents where person_id=?",
+        'DELETE FROM dependents where person_id=?',
         [item.person_id],
         (tx, results) => {
-          console.log("Results", results.rowsAffected);
+          console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
-            console.log("dep deleted");
+            console.log('dep deleted');
           } else {
-            console.log("unsuccessfull");
+            console.log('unsuccessfull');
           }
-        }
+        },
       );
     });
     this.fetchData();
+  };
+  getLocation = () => {
+    Geolocation.getCurrentPosition(
+      (info) => {
+        console.log(info);
+        Geocoder.init('AIzaSyBOfpaMO_tMMsuvS2T4zx4llbtsFqMuT9Y');
+        Geocoder.from(41.89, 12.49)
+          .then((json) => {
+            var addressComponent = json.results[0].address_components[0];
+            console.log(addressComponent);
+          })
+          .catch((error) => console.warn(error));
+      },
+      (e) => {
+        console.log(e);
+      },
+      {timeout: 20000},
+    );
   };
   render() {
     // console.log("state user", this.state.record);
     // console.log("state depe", this.state.dependents);
     // console.log(this.props.user.dependent);
     // Geolocation.getCurrentPosition(info => console.log(info));
-    Geolocation.getCurrentPosition((success)=>{console.log(success)}, (e)=>{console.log(e)}, {timeout: 20000});
 
     return (
-      <View style={Style.container}>
-        <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity
-            style={Style.buttonStyle}
-            onPress={this.onPress.bind(this)}
-          >
-            <Text style={{ color: "#fff" }}>Logout</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={Style.buttonStyle}
-            onPress={this.onAdd.bind(this)}
-          >
-            <Text style={{ color: "#fff" }}>Add new</Text>
-          </TouchableOpacity>
+      <>
+        <View style={{alignItems: 'center'}}>
+          <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity
+              style={Style.buttonStyle}
+              onPress={this.onPress.bind(this)}>
+              <Text style={{color: '#fff'}}>Logout</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={Style.buttonStyle}
+              onPress={this.onAdd.bind(this)}>
+              <Text style={{color: '#fff'}}>Add new</Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={Style.myText}> List View</Text>
         </View>
 
-        <Text style={Style.myText}> List View</Text>
-        <FlatList
-          data={this.state.record}
-          keyExtractor={(item, index) => {
-            return index.toString();
-          }}
-          renderItem={({ item, index }) => (
-            <View style={Style.listItem}>
-              <View style={{ flexDirection: "row", marginRight: "auto" }}>
-                <Text style={{ color: "#fff", fontSize: 15 }}>
-                  {item.first_name}
-                </Text>
-                <Text style={{ marginLeft: 3, color: "#fff", fontSize: 15 }}>
-                  {item.last_name}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-                <TouchableOpacity
-                  // style={Style.listItem}
-                  onPress={() => this.actionOnRow(item, index)}
-                >
-                  <Text style={{ color: "#fff" }}> Edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.showAlert(item)}>
-                  <Text style={{ color: "#fff", marginLeft: 10 }}>Delete</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        />
-        {/* <FlatList
-          data={this.state.record}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View>
-              <Text>{item.name}</Text>
-            </View>
-          )}
-        /> */}
-      </View>
+        <Container>
+          <FlatList
+            data={this.state.record}
+            keyExtractor={(item, index) => {
+              return index.toString();
+            }}
+            renderItem={({item, index}) => <UserCard item={item} />}
+          />
+        </Container>
+      </>
+      // <View style={Style.container}>
+      //   <View style={{flexDirection: 'row'}}>
+      //     <TouchableOpacity
+      //       style={Style.buttonStyle}
+      //       onPress={this.onPress.bind(this)}>
+      //       <Text style={{color: '#fff'}}>Logout</Text>
+      //     </TouchableOpacity>
+      //     <TouchableOpacity
+      //       style={Style.buttonStyle}
+      //       onPress={this.onAdd.bind(this)}>
+      //       <Text style={{color: '#fff'}}>Add new</Text>
+      //     </TouchableOpacity>
+      //   </View>
+
+      //   <Text style={Style.myText}> List View</Text>
+      //   <FlatList
+      //     data={this.state.record}
+      //     keyExtractor={(item, index) => {
+      //       return index.toString();
+      //     }}
+      //     renderItem={({item, index}) => <UserCard item={item} />}
+      //   />
+      // </View>
     );
   }
 }
