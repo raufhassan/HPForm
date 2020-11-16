@@ -15,7 +15,7 @@ import {
 } from 'native-base';
 import {Image, View, TouchableOpacity} from 'react-native';
 
-function UserCard({item}) {
+function UserCard({item, actionOnRow, showAlert}) {
   //   console.log(item.cnic_image);
   return (
     <Card>
@@ -27,16 +27,38 @@ function UserCard({item}) {
             <Text note>{item.address}</Text>
           </Body>
         </Left>
+        <Right>
+          <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity onPress={() => actionOnRow(item)}>
+              <Icon
+                type="FontAwesome"
+                name="edit"
+                style={{fontSize: 20, color: 'grey'}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => showAlert(item)}>
+              <Icon
+                type="FontAwesome"
+                name="trash"
+                style={{fontSize: 20, color: 'grey', marginLeft: 10}}
+              />
+            </TouchableOpacity>
+          </View>
+        </Right>
       </CardItem>
       <CardItem cardBody>
         <Image
-          source={{uri: item.cnic_image}}
+          source={{uri: item.profile_image}}
           style={{height: 200, width: null, flex: 1}}
         />
       </CardItem>
       <CardItem>
         <Left>
-          <Icon type="FontAwesome" name="phone" />
+          <Icon
+            type="FontAwesome"
+            name="phone"
+            style={{fontSize: 20, color: 'grey'}}
+          />
           <Text>{item.contact}</Text>
         </Left>
 

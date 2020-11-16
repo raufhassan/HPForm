@@ -10,10 +10,10 @@ import {
   FETCH_REMARKS,
   UPDATE_USER,
   INSERT,
-} from "./types";
-import { openDatabase } from "react-native-sqlite-storage";
-import { cos } from "react-native-reanimated";
-var db = openDatabase({ name: "UserDatabase.db" });
+} from './types';
+import {openDatabase} from 'react-native-sqlite-storage';
+import {cos} from 'react-native-reanimated';
+var db = openDatabase({name: 'UserDatabase.db'});
 export const personalInfo = (userData) => {
   if (userData) {
     return {
@@ -21,7 +21,7 @@ export const personalInfo = (userData) => {
       payload: userData,
     };
   } else {
-    console.log("no data");
+    console.log('no data');
   }
 };
 export const DependentInfo = (data) => {
@@ -31,7 +31,7 @@ export const DependentInfo = (data) => {
       payload: data,
     };
   } else {
-    console.log("no data");
+    console.log('no data');
   }
 };
 export const Remarks = (data) => {
@@ -41,7 +41,7 @@ export const Remarks = (data) => {
       payload: data,
     };
   } else {
-    console.log("no data");
+    console.log('no data');
   }
 };
 
@@ -63,9 +63,9 @@ export const addNew = () => (dispatch) => {
 };
 
 export const insertUser = (user, dependent, userID, remarks, depArray) => (
-  dispatch
+  dispatch,
 ) => {
-  console.log("called");
+  console.log('called');
   var selectedFor = JSON.stringify(remarks.selectedFor);
   var images = JSON.stringify(remarks.imagesUri);
   var houseOwn = JSON.stringify(user.houseOwn);
@@ -74,7 +74,7 @@ export const insertUser = (user, dependent, userID, remarks, depArray) => (
   db.transaction((tx) => {
     // Loop would be here in case of many values
     tx.executeSql(
-      "INSERT INTO user (user_id,cnic_image, first_name, last_name, gender, guardian, religion, zakat, DOB, marital_status, contact, husband_status, husband_profession, husband_income, husband_company, husband_unemp_type, husband_unemp_reason, address, house_ownership, monthly_rent, town, area, profession, emp_status, monthly_income, skills, rent_exp, education_exp, utility_exp, overall_income, family_is, family_registered,disease, remarks, images) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+      'INSERT INTO user (user_id,cnic_image, first_name, last_name, gender, guardian, religion, zakat, DOB, marital_status, contact, husband_status, husband_profession, husband_income, husband_company, husband_unemp_type, husband_unemp_reason, address, house_ownership, monthly_rent, town, area, profession, emp_status, monthly_income, skills, rent_exp, education_exp, utility_exp, overall_income, family_is, family_registered,disease, remarks, images,profile_image) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
       [
         userID,
         user.cnic,
@@ -111,11 +111,12 @@ export const insertUser = (user, dependent, userID, remarks, depArray) => (
         remarks.disease,
         remarks.Remarks,
         images,
+        remarks.profileImage,
       ],
       (tx, results) => {
-        console.log("Insert Results", results.rowsAffected);
+        console.log('Insert Results', results.rowsAffected);
         if (results.rowsAffected > 0) {
-          console.log("user insertion successfull");
+          console.log('user insertion successfull');
           // console.log("last insert id", results.insertId);
           var personId = results.insertId;
           // dependents insertion
@@ -127,7 +128,7 @@ export const insertUser = (user, dependent, userID, remarks, depArray) => (
           });
           for (let i = 0; i < depArray.length; i++) {
             tx.executeSql(
-              "INSERT INTO dependents (person_id,dep_name,dep_relation,dep_DOB,dep_education,dep_income,councelling,education) VALUES (?,?,?,?,?,?,?,?)",
+              'INSERT INTO dependents (person_id,dep_name,dep_relation,dep_DOB,dep_education,dep_income,councelling,education) VALUES (?,?,?,?,?,?,?,?)',
               [
                 personId,
                 depArray[i].name,
@@ -139,28 +140,28 @@ export const insertUser = (user, dependent, userID, remarks, depArray) => (
                 JSON.stringify(depArray[i].EducationSupport),
               ],
               (tx, results) => {
-                console.log("Insert Results", results.rowsAffected);
+                console.log('Insert Results', results.rowsAffected);
                 if (results.rowsAffected > 0) {
-                  console.log("dep insertion successfull");
+                  console.log('dep insertion successfull');
                 } else {
-                  console.log(" Failed");
+                  console.log(' Failed');
                 }
               },
               (tx, err) => {
-                console.log("error", err);
+                console.log('error', err);
                 console.log(i);
-              }
+              },
             );
           }
 
           // dependents insertion
         } else {
-          console.log(" Failed");
+          console.log(' Failed');
         }
       },
       (tx, err) => {
-        console.log("error", err);
-      }
+        console.log('error', err);
+      },
     );
   });
   /*   return {
@@ -169,14 +170,14 @@ export const insertUser = (user, dependent, userID, remarks, depArray) => (
   }; */
 };
 export const insertDependents = (dependents, personID) => (dispatch) => {
-  console.log("function called");
+  console.log('function called');
   console.log(dependents);
-  console.log("person id", personID);
+  console.log('person id', personID);
   db.transaction((tx) => {
     // Loop would be here in case of many values
     for (let i = 0; i < dependents.length; i++) {
       tx.executeSql(
-        "INSERT INTO dependents (person_id,dep_name,dep_relation,dep_DOB,dep_education,dep_income,councelling,education) VALUES (?,?,?,?,?,?,?,?)",
+        'INSERT INTO dependents (person_id,dep_name,dep_relation,dep_DOB,dep_education,dep_income,councelling,education) VALUES (?,?,?,?,?,?,?,?)',
         [
           personID,
           dependents[i].name,
@@ -190,22 +191,22 @@ export const insertDependents = (dependents, personID) => (dispatch) => {
         // "SELECT * FROM dependents",
         // [],
         (tx, results) => {
-          console.log("Insert Results", results.rowsAffected);
+          console.log('Insert Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
-            console.log("insertion successfull");
+            console.log('insertion successfull');
             // insert = true;
             dispatch({
               type: REMOVE_DATA,
               payload: null,
             });
           } else {
-            console.log(" Failed");
+            console.log(' Failed');
           }
         },
         (tx, err) => {
-          console.log("error", err);
+          console.log('error', err);
           console.log(i);
-        }
+        },
       );
     }
   });
@@ -236,7 +237,7 @@ export const fetchDependents = (user, remarks, dependent) => (dispatch) => {
       "SELECT * FROM 'dependents' WHERE person_id = ?",
       [user.person_id],
       (tx, res) => {
-        console.log("itney dependets:", res.rows.length);
+        console.log('itney dependets:', res.rows.length);
         var len = res.rows.length;
         var data = [];
         if (res.rows.length > 0) {
@@ -281,12 +282,12 @@ export const fetchDependents = (user, remarks, dependent) => (dispatch) => {
             payload: dep,
           });
         }
-      }
+      },
     );
   });
 };
 export const updateUser = (user, dependent, userID, remarks) => (dispatch) => {
-  console.log("update called");
+  console.log('update called');
   var selectedFor = JSON.stringify(remarks.selectedFor);
   var images = JSON.stringify(remarks.imagesUri);
   var houseOwn = JSON.stringify(user.houseOwn);
@@ -295,7 +296,7 @@ export const updateUser = (user, dependent, userID, remarks) => (dispatch) => {
   db.transaction((tx) => {
     // Loop would be here in case of many values
     tx.executeSql(
-      "UPDATE user set user_id=?,cnic_image=?, first_name=?, last_name=?, gender=?, guardian=?, religion=?, zakat=?, DOB=?, marital_status=?, husband_status=?, husband_profession=?, husband_income=?, husband_company=?, husband_unemp_type=?, husband_unemp_reason=?, address=?, house_ownership=?, monthly_rent=?, town=?, area=?, profession=?, emp_status=?, monthly_income=?, skills=?, rent_exp=?, education_exp=?, utility_exp=?, overall_income=?, family_is=?, family_registered=?,disease=?, remarks=?, images=? WHERE person_id=?",
+      'UPDATE user set user_id=?,cnic_image=?, first_name=?, last_name=?, gender=?, guardian=?, religion=?, zakat=?, DOB=?, marital_status=?, husband_status=?, husband_profession=?, husband_income=?, husband_company=?, husband_unemp_type=?, husband_unemp_reason=?, address=?, house_ownership=?, monthly_rent=?, town=?, area=?, profession=?, emp_status=?, monthly_income=?, skills=?, rent_exp=?, education_exp=?, utility_exp=?, overall_income=?, family_is=?, family_registered=?,disease=?, remarks=?, images=? WHERE person_id=?',
       [
         userID,
         user.cnic,
@@ -334,51 +335,51 @@ export const updateUser = (user, dependent, userID, remarks) => (dispatch) => {
         user.person_id,
       ],
       (tx, results) => {
-        console.log("update Results", results.rowsAffected);
+        console.log('update Results', results.rowsAffected);
         if (results.rowsAffected > 0) {
           dispatch({
             type: UPDATE_USER,
             payload: null,
           });
-          console.log("updated successfull");
+          console.log('updated successfull');
         } else {
-          console.log(" Failed");
+          console.log(' Failed');
         }
       },
       (tx, err) => {
-        console.log("error", err);
-      }
+        console.log('error', err);
+      },
     );
   });
 };
 export const deleteDependents = (person_id) => (dispatch) => {
   db.transaction((tx) => {
     tx.executeSql(
-      "DELETE FROM  dependents where person_id=?",
+      'DELETE FROM  dependents where person_id=?',
       [person_id],
       (tx, results) => {
-        console.log("Results", results.rowsAffected);
+        console.log('Results', results.rowsAffected);
         if (results.rowsAffected > 0) {
-          console.log("deleted");
+          console.log('deleted');
           dispatch({
             type: UPDATE_USER,
           });
         } else {
-          console.log("unsuccessfull");
+          console.log('unsuccessfull');
         }
-      }
+      },
     );
   });
 };
 export const updateDependents = (dependents, personID) => (dispatch) => {
-  console.log("function called");
+  console.log('function called');
   console.log(dependents);
-  console.log("person id", personID);
+  console.log('person id', personID);
   db.transaction((tx) => {
     // Loop would be here in case of many values
     for (let i = 0; i < dependents.length; i++) {
       tx.executeSql(
-        "UPDATE dependents set dep_name=?,dep_relation=?,dep_DOB=?,dep_education=?,dep_income=?,councelling=?,education=? WHERE person_id=? AND dep_id=?",
+        'UPDATE dependents set dep_name=?,dep_relation=?,dep_DOB=?,dep_education=?,dep_income=?,councelling=?,education=? WHERE person_id=? AND dep_id=?',
         [
           dependents[i].name,
           dependents[i].Relation,
@@ -393,22 +394,22 @@ export const updateDependents = (dependents, personID) => (dispatch) => {
         // "SELECT * FROM dependents",
         // [],
         (tx, results) => {
-          console.log("update Results", results.rowsAffected);
+          console.log('update Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
-            console.log("updated successfull");
+            console.log('updated successfull');
             // insert = true;
             dispatch({
               type: REMOVE_DATA,
               payload: null,
             });
           } else {
-            console.log(" Failed");
+            console.log(' Failed');
           }
         },
         (tx, err) => {
-          console.log("error", err);
+          console.log('error', err);
           console.log(i);
-        }
+        },
       );
     }
   });
@@ -418,23 +419,23 @@ export const insertCheck = () => (dispatch) => {
     // Loop would be here in case of many values
 
     txn.executeSql(
-      "INSERT INTO table_user (user_name, user_contact, user_email) VALUES (?,?,?)",
-      ["hassdas", 234324, "sdds@gmail.com"],
+      'INSERT INTO table_user (user_name, user_contact, user_email) VALUES (?,?,?)',
+      ['hassdas', 234324, 'sdds@gmail.com'],
       (tx, results) => {
-        console.log("Insert Results", results.rowsAffected);
+        console.log('Insert Results', results.rowsAffected);
         if (results.rowsAffected > 0) {
-          console.log("inserted");
+          console.log('inserted');
           console.log(results.insertId);
-          txn.executeSql("SELECT * FROM dependents", [], (tx, results) => {
-            console.log("rows length", results.rows.length);
+          txn.executeSql('SELECT * FROM dependents', [], (tx, results) => {
+            console.log('rows length', results.rows.length);
             dispatch({
               type: LOGOUT_USER,
             });
           });
         } else {
-          console.log("Updation Failed");
+          console.log('Updation Failed');
         }
-      }
+      },
     );
   });
 };

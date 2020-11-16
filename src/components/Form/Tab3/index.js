@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import Style from '../styles';
 import RadioForm from 'react-native-simple-radio-button';
-import SelectMultiple from 'react-native-select-multiple';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -25,12 +24,11 @@ var db = openDatabase({name: 'UserDatabase.db'});
 
 // const options = ["Ration", "Education ", "Small Business Support", "Health"];
 
-var radio_props = [
-  {label: 'Most deserving', value: 'Most deserving'},
-  {label: 'Deserving ', value: 'Deserving'},
-  {label: 'Not deserving ', value: 'Not deserving'},
-  {label: 'Temporarily relief ', value: 'Temporarily relief'},
-];
+const userList = {
+  123: 'Tom',
+  124: 'Michael',
+  125: 'Christin',
+};
 
 export default class Tab3 extends Component {
   constructor(props) {
@@ -53,7 +51,8 @@ export default class Tab3 extends Component {
         dependentInfo: {},
         profileInfo: {},
         check: '',
-        dp: '',
+        dp: data.profileImage,
+        selectedItems: [],
       };
     } else {
       this.state = {
@@ -73,6 +72,7 @@ export default class Tab3 extends Component {
         personalInfo: {},
         check: '',
         dp: '',
+        selectedItems: [],
       };
     }
     /*   db.transaction((txn) => {
@@ -263,6 +263,7 @@ export default class Tab3 extends Component {
         disease: this.state.disease,
         Remarks: this.state.Remarks,
         imagesUri: this.state.imagesUri,
+        profileImage: this.state.dp,
       };
       if (this.state.check) {
         this.props.deleteDependents(this.state.check);
@@ -296,6 +297,10 @@ export default class Tab3 extends Component {
     }
   }
 
+  onSelectedItemsChange = (selectedItems) => {
+    this.setState({selectedItems});
+  };
+
   actionOnImage = (item) => {
     /* Alert.alert(
       'Set Profile ',
@@ -318,6 +323,7 @@ export default class Tab3 extends Component {
   render() {
     /*   console.log("state variable", this.state.selectedFor);
     console.log(this.state.imagesUri); */
+    console.log('dp is ', this.state.dp);
     const {RemarksErr, typeErr, imageErr, familyErr} = this.state;
     return (
       <ScrollView contentContainerStyle={{flexGrow: 1}}>

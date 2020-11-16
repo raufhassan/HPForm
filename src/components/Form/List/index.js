@@ -139,7 +139,7 @@ class List extends Component {
     this.props.addNew();
     this.props.navigation.navigate('Tab1');
   }
-  actionOnRow = (item, index) => {
+  actionOnRow = (item) => {
     // var { record } = this.state;
     let user = {
       person_id: item.person_id,
@@ -175,6 +175,7 @@ class List extends Component {
       disease: item.disease,
       Remarks: item.remarks,
       imagesUri: JSON.parse(item.images),
+      profileImage: item.profile_image,
     };
     let dependent = {
       EducationExp: item.education_exp,
@@ -264,16 +265,20 @@ class List extends Component {
       <>
         <View style={{alignItems: 'center'}}>
           <View style={{flexDirection: 'row'}}>
-            <TouchableOpacity
-              style={Style.buttonStyle}
-              onPress={this.onPress.bind(this)}>
-              <Text style={{color: '#fff'}}>Logout</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={Style.buttonStyle}
-              onPress={this.onAdd.bind(this)}>
-              <Text style={{color: '#fff'}}>Add new</Text>
-            </TouchableOpacity>
+            <View>
+              <TouchableOpacity
+                style={Style.buttonStyle}
+                onPress={this.onPress.bind(this)}>
+                <Text style={{color: '#fff'}}>Logout</Text>
+              </TouchableOpacity>
+            </View>
+            <View>
+              <TouchableOpacity
+                style={Style.buttonStyle}
+                onPress={this.onAdd.bind(this)}>
+                <Text style={{color: '#fff'}}>Add new</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <Text style={Style.myText}> List View</Text>
         </View>
@@ -284,7 +289,13 @@ class List extends Component {
             keyExtractor={(item, index) => {
               return index.toString();
             }}
-            renderItem={({item, index}) => <UserCard item={item} />}
+            renderItem={({item, index}) => (
+              <UserCard
+                item={item}
+                actionOnRow={this.actionOnRow}
+                showAlert={this.showAlert}
+              />
+            )}
           />
         </Container>
       </>
