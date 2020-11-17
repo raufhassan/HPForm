@@ -18,18 +18,13 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-crop-picker';
 import {openDatabase} from 'react-native-sqlite-storage';
-import {compose} from 'redux';
+import Modal from 'react-native-modal';
+import SelectMultiple from 'react-native-select-multiple';
 let RNFS = require('react-native-fs');
 var db = openDatabase({name: 'UserDatabase.db'});
 
-// const options = ["Ration", "Education ", "Small Business Support", "Health"];
-
-const userList = {
-  123: 'Tom',
-  124: 'Michael',
-  125: 'Christin',
-};
-
+const options = ['Ration', 'Education ', 'Small Business Support', 'Health'];
+// const fruits = ['Apples', 'Oranges', 'Pears'];
 export default class Tab3 extends Component {
   constructor(props) {
     super(props);
@@ -52,7 +47,7 @@ export default class Tab3 extends Component {
         profileInfo: {},
         check: '',
         dp: data.profileImage,
-        selectedItems: [],
+        isModalVisible: false,
       };
     } else {
       this.state = {
@@ -72,7 +67,7 @@ export default class Tab3 extends Component {
         personalInfo: {},
         check: '',
         dp: '',
-        selectedItems: [],
+        isModalVisible: false,
       };
     }
     /*   db.transaction((txn) => {
@@ -98,8 +93,8 @@ export default class Tab3 extends Component {
     }); */
   }
   onSelectionsChange = (value) => {
-    // selectedFruits is array of { label, value }
-    this.setState({selectedFor: value});
+    const val = value.map((el) => el.value);
+    this.setState({selectedFor: val});
   };
   componentDidMount() {
     if (this.props.personalInfo) {
@@ -127,19 +122,13 @@ export default class Tab3 extends Component {
   validate = () => {
     var errors = [];
     const {selectedFor, disease, Remarks, imagesUri, familyIs} = this.state;
-    var count = 0;
-    this.state.selectedFor.map((item) => {
-      if (item === 'Health') {
-        count = count + 1;
-      }
-    });
     if (selectedFor.length === 0) {
       this.setState({typeErr: 'Please select atleast one option'});
       errors.push('type error');
     } else {
       this.setState({typeErr: ''});
     }
-    if (count === 1 && disease === '') {
+    if (this.state.selectedFor.includes('Health') && disease === '') {
       this.setState({diseaseErr: 'Please select disease'});
       errors.push('disease error');
     } else {
@@ -163,6 +152,10 @@ export default class Tab3 extends Component {
     } else {
       this.setState({familyErr: ''});
     }
+    if (!this.state.selectedFor.includes('Health')) {
+      this.setState({disease: ''});
+    }
+
     return errors;
   };
   OpenLibrary = () => {
@@ -197,6 +190,15 @@ export default class Tab3 extends Component {
       this.setState({imagesUri: uri});
     });
   };
+  openCamera = () => {
+    ImagePicker.openCamera({
+      width: 300,
+      height: 400,
+      cropping: true,
+    }).then((image) => {
+      console.log(image);
+    });
+  };
   renderImage = (image) => {
     return (
       <Image
@@ -212,36 +214,27 @@ export default class Tab3 extends Component {
     );
   };
   onHealth = () => {
-    var count = 0;
-    this.state.selectedFor.map((item) => {
-      if (item === 'Health') {
-        count = count + 1;
-      }
-    });
-    if (count == 1) {
+    if (this.state.selectedFor.includes('Health')) {
       return (
         <>
-          <View style={{marginBottom: 10}}>
-            <DropDownPicker
-              items={[
-                {label: 'Hepatitas', value: 'hepatitas'},
-                {label: 'Cancer', value: 'Cancer'},
-                {label: 'Covid 19', value: 'Covid 19'},
-              ]}
-              defaultValue={this.state.disease}
-              containerStyle={Style.multiDropdown}
-              style={{backgroundColor: '#fafafa'}}
-              placeholder={'select a disease'}
-              itemStyle={{
-                justifyContent: 'flex-start',
-              }}
-              dropDownStyle={{backgroundColor: '#fafafa'}}
-              onChangeItem={(item) =>
-                this.setState({
-                  disease: item.value,
-                })
-              }
-            />
+          <View style={Style.picker}>
+            <Picker
+              selectedValue={this.state.disease}
+              style={Style.picker}
+              onValueChange={(value) => {
+                if (value === '-1') {
+                  this.setState({disease: ''});
+                } else {
+                  this.setState({disease: value});
+                }
+              }}>
+              <Picker.Item label="Select disease" value="-1" />
+              <Picker.Item label="Cancer" value="Cancer" />
+              <Picker.Item label="Handicapped" value="Handicapped" />
+              <Picker.Item label="Covid" value="Covid" />
+              <Picker.Item label="Lukemia" value="Lukemia" />
+              <Picker.Item label="Other" value="Other" />
+            </Picker>
           </View>
           {this.state.diseaseErr ? (
             <Text style={Style.error}>{this.state.diseaseErr}</Text>
@@ -250,8 +243,8 @@ export default class Tab3 extends Component {
       );
     }
   };
+
   onSubmit() {
-    // console.log(this.state);
     // e.preventDefault(e);
     // console.log(this.state);
     var isValid = this.validate();
@@ -297,10 +290,6 @@ export default class Tab3 extends Component {
     }
   }
 
-  onSelectedItemsChange = (selectedItems) => {
-    this.setState({selectedItems});
-  };
-
   actionOnImage = (item) => {
     /* Alert.alert(
       'Set Profile ',
@@ -320,10 +309,10 @@ export default class Tab3 extends Component {
     ); */
     this.setState({dp: item}, console.log(this.state.dp));
   };
+  toggleModal = () => {
+    this.setState({isModalVisible: !this.state.isModalVisible});
+  };
   render() {
-    /*   console.log("state variable", this.state.selectedFor);
-    console.log(this.state.imagesUri); */
-    console.log('dp is ', this.state.dp);
     const {RemarksErr, typeErr, imageErr, familyErr} = this.state;
     return (
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
@@ -335,7 +324,6 @@ export default class Tab3 extends Component {
           <View style={Style.center}>
             <Text style={Style.label}>Is Family deserving? </Text>
           </View>
-          <View style={{marginTop: 10}}></View>
           <View style={Style.picker}>
             <Picker
               selectedValue={this.state.familyIs}
@@ -367,71 +355,39 @@ export default class Tab3 extends Component {
               onPress={(value) => this.setState({ familyIs: value })}
             />
           </View> */}
-          <View>
+          <View style={{width: '80%'}}>
             <Text style={Style.label}>Family registered for</Text>
-
-            {/* <SelectMultiple
-              items={options}
-              selectedItems={this.state.selectedFor}
-              onSelectionsChange={(value) => this.onSelectionsChange(value)}
-            /> */}
-            <View style={{marginVertical: 10, alignItems: 'flex-start'}}>
-              <DropDownPicker
-                items={[
-                  {
-                    label: 'Ration',
-                    value: 'Ration',
-                  },
-                  {
-                    label: 'Education',
-                    value: 'Education',
-                  },
-                  {
-                    label: 'Small Business support',
-                    value: 'Business',
-                  },
-                  {
-                    label: 'Health',
-                    value: 'Health',
-                  },
-                ]}
-                multiple={true}
-                multipleText="%d items have been selected."
-                placeholder={'Select registration type'}
-                min={0}
-                max={10}
-                defaultValue={this.state.selectedFor}
-                // containerStyle={{ height: 50, width: 330 }}
-                containerStyle={Style.multiDropdown}
-                style={{backgroundColor: '#fafafa'}}
-                dropDownStyle={{height: 100}}
-                itemStyle={{
-                  justifyContent: 'flex-start',
-                }}
-                onChangeItem={(item) =>
-                  this.setState({
-                    selectedFor: item, // an array of the selected items
-                  })
-                }
-              />
-            </View>
+            <TouchableOpacity style={Style.input} onPress={this.toggleModal}>
+              <Text>{this.state.selectedFor.length} items selected</Text>
+            </TouchableOpacity>
           </View>
           {typeErr ? <Text style={Style.error}>{typeErr}</Text> : null}
-          {/*    {this.onHealth() ? (
-          <View>
-            <Text>disease</Text>
-          </View>
-        ) : (
-          <View>
-            <Text>no health</Text>
-          </View>
-        )} */}
+
           {this.onHealth()}
+          <View>
+            {/* modal for multiple selectio */}
+            <Modal
+              isVisible={this.state.isModalVisible}
+              onBackdropPress={this.toggleModal}>
+              <View style={{backgroundColor: 'white'}}>
+                <View style={{width: '100%'}}>
+                  <SelectMultiple
+                    items={options}
+                    selectedItems={this.state.selectedFor}
+                    onSelectionsChange={(value) =>
+                      this.onSelectionsChange(value)
+                    }
+                  />
+                </View>
+              </View>
+            </Modal>
+          </View>
           <TextInput
             value={this.state.Remarks}
             onChangeText={(Remarks) => this.setState({Remarks})}
             placeholder={'Remarks'}
             style={Style.input}></TextInput>
+
           {RemarksErr ? <Text style={Style.error}>{RemarksErr}</Text> : null}
           <TouchableOpacity style={Style.upload} onPress={this.OpenLibrary}>
             <Text style={{color: '#428bca', fontWeight: 'bold'}}>
@@ -462,6 +418,7 @@ export default class Tab3 extends Component {
             </View>
           </ScrollView> */}
           {/* <SafeAreaView style={{flex: 1, justifyContent: 'center'}}> */}
+
           <FlatList
             style={Style.GridList}
             data={this.state.imagesUri}

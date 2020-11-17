@@ -95,6 +95,7 @@ export default Style = StyleSheet.create({
   },
   label: {
     fontSize: hp('3%'),
+    marginBottom: 10,
   },
   upload: {
     padding: 10,

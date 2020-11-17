@@ -167,7 +167,7 @@ class List extends Component {
       empStatus: item.emp_status,
       MonthlyIncome: item.monthly_income.toString(),
       skills: item.skills,
-      cnic: item.cnic_image,
+      cnic: JSON.parse(item.cnic_image),
     };
     let remarks = {
       familyIs: item.family_is,
@@ -299,29 +299,6 @@ class List extends Component {
           />
         </Container>
       </>
-      // <View style={Style.container}>
-      //   <View style={{flexDirection: 'row'}}>
-      //     <TouchableOpacity
-      //       style={Style.buttonStyle}
-      //       onPress={this.onPress.bind(this)}>
-      //       <Text style={{color: '#fff'}}>Logout</Text>
-      //     </TouchableOpacity>
-      //     <TouchableOpacity
-      //       style={Style.buttonStyle}
-      //       onPress={this.onAdd.bind(this)}>
-      //       <Text style={{color: '#fff'}}>Add new</Text>
-      //     </TouchableOpacity>
-      //   </View>
-
-      //   <Text style={Style.myText}> List View</Text>
-      //   <FlatList
-      //     data={this.state.record}
-      //     keyExtractor={(item, index) => {
-      //       return index.toString();
-      //     }}
-      //     renderItem={({item, index}) => <UserCard item={item} />}
-      //   />
-      // </View>
     );
   }
 }

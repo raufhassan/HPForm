@@ -70,6 +70,7 @@ export const insertUser = (user, dependent, userID, remarks, depArray) => (
   var images = JSON.stringify(remarks.imagesUri);
   var houseOwn = JSON.stringify(user.houseOwn);
   var zakat = JSON.stringify(user.zakat);
+  var cnic = JSON.stringify(user.cnic);
 
   db.transaction((tx) => {
     // Loop would be here in case of many values
@@ -77,7 +78,7 @@ export const insertUser = (user, dependent, userID, remarks, depArray) => (
       'INSERT INTO user (user_id,cnic_image, first_name, last_name, gender, guardian, religion, zakat, DOB, marital_status, contact, husband_status, husband_profession, husband_income, husband_company, husband_unemp_type, husband_unemp_reason, address, house_ownership, monthly_rent, town, area, profession, emp_status, monthly_income, skills, rent_exp, education_exp, utility_exp, overall_income, family_is, family_registered,disease, remarks, images,profile_image) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
       [
         userID,
-        user.cnic,
+        cnic,
         user.first_name,
         user.last_name,
         user.gender,
@@ -292,14 +293,15 @@ export const updateUser = (user, dependent, userID, remarks) => (dispatch) => {
   var images = JSON.stringify(remarks.imagesUri);
   var houseOwn = JSON.stringify(user.houseOwn);
   var zakat = JSON.stringify(user.zakat);
+  var cnic = JSON.stringify(user.cnic);
 
   db.transaction((tx) => {
     // Loop would be here in case of many values
     tx.executeSql(
-      'UPDATE user set user_id=?,cnic_image=?, first_name=?, last_name=?, gender=?, guardian=?, religion=?, zakat=?, DOB=?, marital_status=?, husband_status=?, husband_profession=?, husband_income=?, husband_company=?, husband_unemp_type=?, husband_unemp_reason=?, address=?, house_ownership=?, monthly_rent=?, town=?, area=?, profession=?, emp_status=?, monthly_income=?, skills=?, rent_exp=?, education_exp=?, utility_exp=?, overall_income=?, family_is=?, family_registered=?,disease=?, remarks=?, images=? WHERE person_id=?',
+      'UPDATE user set user_id=?,cnic_image=?, first_name=?, last_name=?, gender=?, guardian=?, religion=?, zakat=?, DOB=?, marital_status=?, husband_status=?, husband_profession=?, husband_income=?, husband_company=?, husband_unemp_type=?, husband_unemp_reason=?, address=?, house_ownership=?, monthly_rent=?, town=?, area=?, profession=?, emp_status=?, monthly_income=?, skills=?, rent_exp=?, education_exp=?, utility_exp=?, overall_income=?, family_is=?, family_registered=?,disease=?, remarks=?, images=?, profile_image=?  WHERE person_id=?',
       [
         userID,
-        user.cnic,
+        cnic,
         user.first_name,
         user.last_name,
         user.gender,
@@ -332,6 +334,7 @@ export const updateUser = (user, dependent, userID, remarks) => (dispatch) => {
         remarks.disease,
         remarks.Remarks,
         images,
+        remarks.profileImage,
         user.person_id,
       ],
       (tx, results) => {

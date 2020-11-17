@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -9,21 +9,21 @@ import {
   ScrollView,
   Button,
   Image,
-} from "react-native";
-import Style from "../styles";
+} from 'react-native';
+import Style from '../styles';
 
 export function Husband(props) {
   //   const [unemploy, setUnemploy] = useState("");
   //   console.log(props.data.HbUnemp);
   var data = props.data;
   let input, input2;
-  if (data.HbUnemp === "Permenant") {
+  if (data.HbUnemp === 'Temporary') {
     input2 = (
       <>
         <TextInput
           value={data.Hbprofession}
           onChangeText={(value) => props.onProfessionChange(value)}
-          placeholder={"Temporary"}
+          placeholder={'Husband profession'}
           style={Style.input}
         />
         {data.HbprofessionErr ? (
@@ -32,13 +32,13 @@ export function Husband(props) {
       </>
     );
   }
-  if (data.HbUnemp === "Profession") {
+  if (data.HbUnemp === 'Permenant') {
     input2 = (
       <>
         <TextInput
           value={data.HbReason}
           onChangeText={(value) => props.onReasonChange(value)}
-          placeholder={"Reason"}
+          placeholder={'Husband unemployment reason'}
           style={Style.input}
         />
         {data.HbReasonErr ? (
@@ -47,44 +47,43 @@ export function Husband(props) {
       </>
     );
   }
-  if (data.HbState === "Employed") {
+  if (data.HbState === 'Employed') {
     input = (
       <>
         <TextInput
           value={data.Hbprofession}
           onChangeText={(value) => props.onProfessionChange(value)}
-          placeholder={"Husband profession"}
+          placeholder={'Husband profession'}
           style={Style.input}
         />
         <TextInput
           value={data.Hbincome}
           onChangeText={(value) => props.onIncomeChange(value)}
-          placeholder={"Husband income"}
-          keyboardType={"numeric"}
+          placeholder={'Husband income'}
+          keyboardType={'numeric'}
           style={Style.input}
         />
         <TextInput
           value={data.Hbcompany}
           onChangeText={(value) => props.onCompanyChange(value)}
-          placeholder={"Husband company"}
+          placeholder={'Husband company'}
           style={Style.input}
         />
       </>
     );
   }
-  if (data.HbState === "Unemployed") {
+  if (data.HbState === 'Unemployed') {
     input = (
       <>
         <View style={Style.picker}>
           <Picker
-            itemStyle={{ color: "blue" }}
+            itemStyle={{color: 'blue'}}
             selectedValue={data.HbUnemp}
             onValueChange={(value) => {
-              if (value !== "-1") {
+              if (value !== '-1') {
                 props.onUnEmpChange(value);
               }
-            }}
-          >
+            }}>
             <Picker.Item label="Husband unemployement Type" value="-1" />
             <Picker.Item label="Permenant" value="Permenant" />
             <Picker.Item label="Temporary" value="Temporary" />
@@ -101,10 +100,9 @@ export function Husband(props) {
     <>
       <View style={Style.picker}>
         <Picker
-          itemStyle={{ color: "blue" }}
+          itemStyle={{color: 'blue'}}
           selectedValue={data.HbState}
-          onValueChange={(value) => props.onStatusChange(value)}
-        >
+          onValueChange={(value) => props.onStatusChange(value)}>
           <Picker.Item label="Husband employment status" value="-1" />
           <Picker.Item label="Employed" value="Employed" />
           <Picker.Item label="Unemployed" value="Unemployed" />
